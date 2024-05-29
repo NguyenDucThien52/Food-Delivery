@@ -5,7 +5,7 @@ import 'package:flutter/gestures.dart';
 // import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
-import 'package:food_delivery/Anonymous/login_page.dart';
+import 'package:food_delivery/View/Anonymous/login_page.dart';
 
 // import 'package:flutter/painting.dart';
 // import 'package:flutter/widgets.dart';

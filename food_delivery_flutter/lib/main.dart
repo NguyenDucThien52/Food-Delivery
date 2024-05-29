@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
-import 'Anonymous/login_page.dart';
+import 'View/Anonymous/login_page.dart';
+// import 'Page/home.dart';
 
 void main() async {
   //Connect firebase
@@ -17,10 +18,10 @@ void main() async {
               projectId: 'food-delivery-18948'))
       : await Firebase.initializeApp();
 
-  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [SystemUiOverlay.top]);  // hide the navigation bar android
+  await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+      overlays: [SystemUiOverlay.top]); // hide the navigation bar android
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -35,6 +36,11 @@ class MyApp extends StatelessWidget {
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrangeAccent),
         ),
+        darkTheme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        ),
+        themeMode: ThemeMode.light,
         home: LoginPage(),
       ),
     );

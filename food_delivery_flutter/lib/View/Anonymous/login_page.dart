@@ -1,8 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:food_delivery/Anonymous/signup_page.dart';
-import 'package:food_delivery/Page/home_page.dart';
+import 'package:food_delivery/View/Anonymous/signup_page.dart';
+import 'package:food_delivery/View/Page/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
