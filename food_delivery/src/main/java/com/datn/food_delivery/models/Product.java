@@ -13,6 +13,10 @@ public class Product {
     private double price;
     private String imageURL;
 
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Category category;
+
     public Product() {
     }
 

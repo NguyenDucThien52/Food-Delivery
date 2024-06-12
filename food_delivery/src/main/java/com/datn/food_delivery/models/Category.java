@@ -1,9 +1,8 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Category {
@@ -11,6 +10,12 @@ public class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long category_id;
     private String name;
+//    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Product> products;
+
+
+    public Category() {
+    }
 
     public Category(String name) {
         this.name = name;

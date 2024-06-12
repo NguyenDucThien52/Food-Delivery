@@ -7,14 +7,6 @@ import 'package:food_delivery/Service/ProductAPI.dart';
 
 import '../../Model/Product.dart';
 
-// class Product {
-//   final String name;
-//   final String imageUrl;
-//   final String description;
-//   final double price;
-//
-//   Product({required this.name, required this.imageUrl, required this.description, required this.price});
-// }
 
 class Home extends StatefulWidget {
   @override
@@ -29,6 +21,17 @@ class _HomeState extends State<Home> {
     super.initState();
     products = ProductAPI().fetchProducts();
   }
+  final List<Map<String, String>> productss = [
+    {"name": "Product 1", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 2", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 3", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 4", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 5", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 6", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 7", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 8", "image": "https://via.placeholder.com/150"},
+    {"name": "Product 9", "image": "https://via.placeholder.com/150"},
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -36,18 +39,26 @@ class _HomeState extends State<Home> {
       child: DefaultTabController(
       length: 4,
       child: Scaffold(
-        appBar: AppBar(
-          flexibleSpace: TabBar(
-            tabs: [
-              Tab(text: 'Coffee', icon: Icon(Icons.coffee)),
-              Tab(text: 'Tea', icon: Icon(Icons.local_drink)),
-              Tab(text: 'Juice', icon: Icon(Icons.local_bar)),
-              Tab(text: 'Cake', icon: Icon(Icons.cake)),
-            ],
-          ),
-        ),
-        body: TabBarView(
+        body:
+        Column(
           children: [
+            SizedBox(
+              height: 200,
+              child: GridView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: EdgeInsets.all(10.0),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
+                itemCount: productss.length,
+                itemBuilder: (context, index) {
+                  return ProductItem(
+                    name: productss[index]["name"]!,
+                    imageUrl: productss[index]["image"]!,
+                  );
+                },
+              ),
+            ),
             SingleChildScrollView(
               scrollDirection: Axis.vertical,
               child: FutureBuilder<List<Product>>(
@@ -148,13 +159,40 @@ class _HomeState extends State<Home> {
                 },
               ),
             ),
-            Center(child: Text('Tea Page')),
-            Center(child: Text('Juice Page')),
-            Center(child: Text('Cake Page')),
           ],
         ),
+
+
       ),
             ),
+    );
+  }
+}
+class ProductItem extends StatelessWidget {
+  final String name;
+  final String imageUrl;
+
+  ProductItem({required this.name, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Image.network(
+          imageUrl,
+          height: 50,
+          width: 50,
+        ),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+            name,
+            style: TextStyle(fontSize: 16.0),
+            textAlign: TextAlign.center,
+          ),
+        ),
+      ],
     );
   }
 }

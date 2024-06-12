@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
+import 'package:food_delivery/Model/User.dart';
 
+import 'package:food_delivery/Service/UserAPI.dart';
 // import 'package:flutter/cupertino.dart';
 // import 'package:flutter/cupertino.dart';
 
@@ -30,6 +34,9 @@ class _SignUpPageState extends State<SignUpPage> {
   final _confirmpasswordKey = GlobalKey<FormFieldState>();
   final _phoneKey = GlobalKey<FormFieldState>();
   String errorMessage = '';
+
+  var id = Random().nextInt(1000);
+   final UserService userService = UserService();
 
   @override
   Widget build(BuildContext context) {
@@ -281,8 +288,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     height: 45,
                     child: ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate() && _passwordController==_confirmpasswordKey) {
+                        if (_formKey.currentState!.validate() && _passwordController.text==_confirmpasswordController.text) {
                           register();
+                          userService.registerUser(Person(user_id: id, fullName: _nameController.text, email: _emailController.text, address: 'Le Thanh Nghi, Hai Ba Trung, Ha Noi', passwowrd: _passwordController.text,phoneNumber: _phoneController.text));
                         }
                       },
                       style: ButtonStyle(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/View/Page/Shopping.dart';
 import 'package:food_delivery/View/Page/home.dart';
+import 'package:food_delivery/View/Page/shop.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -16,9 +18,9 @@ class _HomePageState extends State<HomePage> {
       case 0:
         page = Home();
       case 1:
-        page = Placeholder();
+        page = Shopping();
       case 2:
-        page = Placeholder();
+        page = Shop();
       case 3:
         page = Placeholder();
       case 4:

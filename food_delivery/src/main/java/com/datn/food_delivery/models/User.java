@@ -1,9 +1,6 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class User {
@@ -16,6 +13,16 @@ public class User {
     private String phoneNumber;
     private String address;
     private String imageURL;
+//    @OneToMany
+//    private Order order;
+//    @OneToMany
+//    private Payment payment;
+//    @OneToMany
+//    private Review review;
+//    @OneToOne
+//    private FavoriteFood favoriteFood;
+//    @OneToOne
+//    private FavoriteShop favoriteShop;
 
     public User() {
     }

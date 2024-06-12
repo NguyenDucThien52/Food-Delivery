@@ -26,7 +26,7 @@ public class HomeController {
     @GetMapping("/create")
     public String addProduct(Model model){
         List<Product> products = repository.findAll();
-        return "products/create";
+        return "/products/create";
     }
 
     @PostMapping ("/store")

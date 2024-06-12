@@ -1,9 +1,6 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class FavoriteFood {
@@ -11,6 +8,13 @@ public class FavoriteFood {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long favoriteFood_id;
     private int food_id;
+//    @ManyToOne
+//    @JoinColumn(name = "shop_id")
+//    private Shop shop;
+
+
+    public FavoriteFood() {
+    }
 
     public FavoriteFood(int food_id) {
         this.food_id = food_id;

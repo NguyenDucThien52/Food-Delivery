@@ -1,9 +1,7 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import org.aspectj.weaver.ast.Or;
 
 @Entity
 public class OrderItem {
@@ -11,16 +9,20 @@ public class OrderItem {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long orderItem_id;
     private int quantity;
-    private long food_id;
-    private long order_id;
+
+//    @ManyToOne
+//    @JoinColumn(name = "product_id")
+//    private Product product;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "order_id")
+//    private Order order;
 
     public OrderItem() {
     }
 
     public OrderItem(int quantity, long food_id, long order_id) {
         this.quantity = quantity;
-        this.food_id = food_id;
-        this.order_id = order_id;
     }
 
     public long getOrderItem_id() {
@@ -37,21 +39,5 @@ public class OrderItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
-    }
-
-    public long getFood_id() {
-        return food_id;
-    }
-
-    public void setFood_id(long food_id) {
-        this.food_id = food_id;
-    }
-
-    public long getOrder_id() {
-        return order_id;
-    }
-
-    public void setOrder_id(long order_id) {
-        this.order_id = order_id;
     }
 }

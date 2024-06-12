@@ -1,9 +1,6 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 import java.util.Date;
 
@@ -14,7 +11,9 @@ public class Payment {
     private long payment_id;
     private String paymentMethod;
     private Date paymentDate;
-    private long user_id;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id")
+//    private User user;
 
     public Payment() {
     }
@@ -24,13 +23,7 @@ public class Payment {
         this.paymentDate = paymentDate;
     }
 
-    public long getUser_id() {
-        return user_id;
-    }
 
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
-    }
 
     public long getPayment_id() {
         return payment_id;
