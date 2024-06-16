@@ -1,5 +1,3 @@
-import 'package:food_delivery/Model/Product.dart';
-
 class Person{
   final int? user_id;
   final String fullName;

@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:food_delivery/Model/Product.dart';
-import 'package:food_delivery/Service/ProductAPI.dart';
 
 class Shopping extends StatefulWidget {
   @override

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:food_delivery/View/Page/Shopping.dart';
 import 'package:food_delivery/View/Page/home.dart';
 import 'package:food_delivery/View/Page/shop.dart';
 
@@ -18,14 +17,12 @@ class _HomePageState extends State<HomePage> {
       case 0:
         page = Home();
       case 1:
-        page = Shopping();
-      case 2:
         page = Shop();
+      case 2:
+        page = Placeholder();
       case 3:
         page = Placeholder();
       case 4:
-        page = Placeholder();
-      case 5:
         page = Placeholder();
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -55,10 +52,6 @@ class _HomePageState extends State<HomePage> {
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
                 label: "Trang chủ",
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.shopping_cart),
-                label: "Đặt hàng",
               ),
               BottomNavigationBarItem(
                 icon: Icon(Icons.store),

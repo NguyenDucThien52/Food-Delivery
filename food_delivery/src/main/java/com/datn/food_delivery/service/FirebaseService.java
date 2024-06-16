@@ -8,7 +8,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -22,12 +25,19 @@ public class FirebaseService {
         ApiFuture<WriteResult> Result = docRef.set(user);
     }
 
+    public User getUser() throws InterruptedException, ExecutionException{
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> future = firestore.collection("users").get();
+        QueryDocumentSnapshot document = (QueryDocumentSnapshot) future.get().getDocuments();
+
+        User user = document.toObject(User.class);
+        return user;
+    }
+
     public List<Product> getAllProducts() throws InterruptedException, ExecutionException {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = firestore.collection("products").get();
-        System.out.println("Hello");
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
-        System.out.println("World");
 
         List<Product> products = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents){
@@ -37,5 +47,11 @@ public class FirebaseService {
             System.out.println(product.getName() + "\n");
         }
         return products;
+    }
+
+    public void saveProdct(Product product) throws InterruptedException, ExecutionException {
+        Firestore firestore = FirestoreClient.getFirestore();
+        DocumentReference docRef = firestore.collection("products").document(String.valueOf(product.getProduct_id()));
+        ApiFuture<WriteResult> Result = docRef.set(product);
     }
 }

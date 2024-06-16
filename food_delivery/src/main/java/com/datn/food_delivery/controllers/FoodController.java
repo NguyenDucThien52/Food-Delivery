@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -26,6 +28,12 @@ public class FoodController {
         return firebaseService.getAllProducts();
     }
 
+    @PostMapping("/insert")
+    void insertProduct(@RequestBody Product product) throws ExecutionException, InterruptedException {
+        System.out.println(product);
+        firebaseService.saveProdct(product);
+    }
+
 //    @GetMapping("/{id}")
 //    ResponseEntity<ResponseObject> findById(@PathVariable Long id){
 //        Optional<Product> product = repository.findById(id);
@@ -35,11 +43,6 @@ public class FoodController {
 //
 //    }
 
-//    @PostMapping("/insert")
-//    ResponseEntity<ResponseObject> insertProduct(@RequestBody Product product){
-//        System.out.println(product);
-//        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", "Insert product successfullly", repository.save(product)));
-//    }
 //
 //    @DeleteMapping("/delete/{id}")
 //    ResponseEntity<ResponseObject> deleteProduct(@RequestBody Product product){

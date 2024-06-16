@@ -104,7 +104,7 @@ class _HomeState extends State<Home> {
                                         Padding(
                                           padding: const EdgeInsets.symmetric(horizontal: 16.0),
                                           child: Text(
-                                            '\$${product.price!.toStringAsFixed(2)}',
+                                            '\$${product.price.toStringAsFixed(2)}',
                                             style: TextStyle(fontSize: 16, color: Colors.grey),
                                           ),
                                         ),
@@ -172,7 +172,7 @@ class ProductItem extends StatelessWidget {
   final String name;
   final String imageUrl;
 
-  ProductItem({required this.name, required this.imageUrl});
+  const ProductItem({required this.name, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {

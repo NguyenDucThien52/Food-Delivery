@@ -15,4 +15,12 @@ class ProductAPI {
       throw Exception('Failed to load products');
     }
   }
+
+  Future<void> insertProducts(Product product) async {
+    final response = await http.post(
+      Uri.parse('$apiUrl + insert'),
+      body: jsonEncode(product.toJson()),
+    );
+    if (response.statusCode == 200) {}
+  }
 }

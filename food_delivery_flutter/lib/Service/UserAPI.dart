@@ -15,7 +15,7 @@ class UserService {
     );
 
     if (response.statusCode == 200) {
-      return int.parse(response.body); // Assume response.body contains the userId as a string
+      return int.parse(response.body);
     } else {
       throw Exception('Failed to register user');
     }

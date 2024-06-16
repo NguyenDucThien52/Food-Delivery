@@ -18,6 +18,7 @@ public class FirebaseConfig {
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setStorageBucket("http://food-delivery-18948.appspot.com")
                 .build();
 
         return FirebaseApp.initializeApp(options);

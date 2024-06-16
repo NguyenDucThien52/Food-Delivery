@@ -12,10 +12,12 @@ void main() async {
   Platform.isAndroid
       ? await Firebase.initializeApp(
           options: const FirebaseOptions(
-              apiKey: 'AIzaSyDKWZUdiJDHjdRz85cvQ3rHjImiXPE1E0g',
-              appId: '1:492655248277:android:b14d95cae6e3c7de216c9c',
-              messagingSenderId: '492655248277',
-              projectId: 'food-delivery-18948'))
+          apiKey: 'AIzaSyDKWZUdiJDHjdRz85cvQ3rHjImiXPE1E0g',
+          appId: '1:492655248277:android:b14d95cae6e3c7de216c9c',
+          messagingSenderId: '492655248277',
+          projectId: 'food-delivery-18948',
+          storageBucket: "food-delivery-18948.appspot.com",
+        ))
       : await Firebase.initializeApp();
 
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
