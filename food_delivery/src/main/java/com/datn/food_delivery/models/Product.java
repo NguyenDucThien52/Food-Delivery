@@ -21,9 +21,11 @@ public class Product {
         this.name = name;
     }
 
-    public Product(String name, String description) {
+    public Product(String name, String description, double price, String imageURL) {
         this.name = name;
         this.description = description;
+        this.price = price;
+        this.imageURL = imageURL;
     }
 
     public Product(long product_id, String name, String description, double price, String imageURL) {
@@ -33,7 +35,6 @@ public class Product {
         this.price = price;
         this.imageURL = imageURL;
     }
-//    }
 
     public long getProduct_id() {
         return product_id;

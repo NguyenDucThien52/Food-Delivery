@@ -5,10 +5,8 @@ import jakarta.persistence.*;
 @Entity
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long user_id;
-    private String fullName;
     private String email;
+    private String fullName;
     private String password;
     private String phoneNumber;
     private String address;
@@ -33,14 +31,6 @@ public class User {
         this.password = password;
         this.phoneNumber = phoneNumber;
         this.address = address;
-    }
-
-    public long getUser_id() {
-        return user_id;
-    }
-
-    public void setUser_id(long user_id) {
-        this.user_id = user_id;
     }
 
     public String getFullName() {

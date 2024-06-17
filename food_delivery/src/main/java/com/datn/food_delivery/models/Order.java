@@ -16,7 +16,6 @@ public class Order {
     private Date orderDate;
     private String deliveryAddress;
 //    @ManyToOne
-//    @JoinColumn(name = "user_id")
 //    private User user;
 //    @ManyToOne
 //    @JoinColumn(name = "promotion_id")

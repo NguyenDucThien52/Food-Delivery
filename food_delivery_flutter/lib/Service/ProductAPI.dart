@@ -1,9 +1,10 @@
 import 'dart:convert';
+import 'package:food_delivery/Service/CartAPI.dart';
 import 'package:http/http.dart' as http;
 import 'package:food_delivery/Model/Product.dart';
 
-class ProductAPI {
-  final String apiUrl = "http://192.168.1.5:8080/api/products";
+class ProductService {
+  final String apiUrl = "http://192.168.1.4:8080/api/products";
 
   Future<List<Product>> fetchProducts() async {
     final response = await http.get(Uri.parse(apiUrl));
@@ -16,11 +17,22 @@ class ProductAPI {
     }
   }
 
-  Future<void> insertProducts(Product product) async {
+  // Future<List<Product>> getProductsByCart() async{
+  //   final reponse = await http.get(Uri.parse('$apiUrl?product_id='));
+  // }
+
+  Future<int> insertProducts(Product product) async {
     final response = await http.post(
-      Uri.parse('$apiUrl + insert'),
+      Uri.parse('$apiUrl/insert'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
       body: jsonEncode(product.toJson()),
     );
-    if (response.statusCode == 200) {}
+    if (response.statusCode == 200) {
+      return int.parse(response.body);
+    }else{
+      throw Exception('Failed to add product');
+    }
   }
 }

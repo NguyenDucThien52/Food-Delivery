@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/View/Page/Cart_page.dart';
 import 'package:food_delivery/View/Page/home.dart';
 import 'package:food_delivery/View/Page/shop.dart';
 
@@ -41,8 +42,8 @@ class _HomePageState extends State<HomePage> {
             // backgroundColor: const Color.fromRGBO(82, 170, 94, 1.0),
             // tooltip: 'Increment',
             shape: const CircleBorder(),
-            onPressed: () {},
-            child: const Icon(Icons.add, size: 28),
+            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page()));},
+            child: const Icon(Icons.shopping_cart, size: 28),
           ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,

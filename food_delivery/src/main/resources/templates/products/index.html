@@ -33,7 +33,7 @@
                     <td th:text="${product.name}"></td>
                     <td th:text="${product.description}"></td>
                     <td th:text="${product.price}"></td>
-                    <td><img src="https://loremflickr.com/200/120/foods?random=1"></td>
+                    <td><img th:src="${product.imageURL}" width="200" height="200"></td>
                     <td>
                         <a th:href="@{products/edit/{id}(id=${product.product_id})}">
                             <button>Edit</button>

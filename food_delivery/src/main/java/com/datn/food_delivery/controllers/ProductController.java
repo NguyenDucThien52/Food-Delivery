@@ -1,24 +1,17 @@
 package com.datn.food_delivery.controllers;
 
 import com.datn.food_delivery.models.Product;
-import com.datn.food_delivery.models.ResponseObject;
-import com.datn.food_delivery.repositories.ProductRepository;
 import com.datn.food_delivery.service.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 
 @CrossOrigin(allowedHeaders ="*",methods = {RequestMethod.POST , RequestMethod.GET})
 @RestController
 @RequestMapping(path = "/api/products")
-public class FoodController {
+public class ProductController {
 
     @Autowired
     private FirebaseService firebaseService;
@@ -30,8 +23,12 @@ public class FoodController {
 
     @PostMapping("/insert")
     void insertProduct(@RequestBody Product product) throws ExecutionException, InterruptedException {
-        System.out.println(product);
-        firebaseService.saveProdct(product);
+        firebaseService.saveProduct(product);
+    }
+
+    @GetMapping("/getProductByCart")
+    List<Product> getProductsByCart(@RequestParam List<Long> product_id) throws  ExecutionException, InterruptedException{
+        return firebaseService.getProductsByCart(product_id);
     }
 
 //    @GetMapping("/{id}")

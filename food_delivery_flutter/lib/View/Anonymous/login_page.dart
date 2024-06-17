@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:food_delivery/View/Anonymous/signup_page.dart';
 import 'package:food_delivery/View/Page/admin.dart';
 import 'package:food_delivery/View/Page/home.dart';
+import 'package:food_delivery/View/Page/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -188,9 +189,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   Future<void> login() async {
     try {
-      if(_emailController.text == "admin" && _passwordController.text == "admin123"){
-        Navigator.push(context, MaterialPageRoute(builder: (context) => admin()));
-      }else{
+
         await _auth.signInWithEmailAndPassword(
           email: _emailController.text,
           password: _passwordController.text,
@@ -198,8 +197,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         setState(() {
           errorMessage = '';
         });
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
-      }
+        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
     } catch (e) {
       setState(() {
         errorMessage = e.toString();

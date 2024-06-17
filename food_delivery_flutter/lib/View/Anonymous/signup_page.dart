@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
+import 'package:food_delivery/Model/Cart.dart';
 import 'package:food_delivery/Model/User.dart';
+import 'package:food_delivery/Service/CartAPI.dart';
 
 import 'package:food_delivery/Service/UserAPI.dart';
 
@@ -38,6 +40,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   var id = Random().nextInt(1000);
   final UserService userService = UserService();
+  final CartService cartService = CartService();
 
   @override
   Widget build(BuildContext context) {
@@ -292,13 +295,6 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (_formKey.currentState!.validate() &&
                             _passwordController.text == _confirmpasswordController.text) {
                           register();
-                          userService.registerUser(Person(
-                              user_id: id,
-                              fullName: _nameController.text,
-                              email: _emailController.text,
-                              address: 'Le Thanh Nghi, Hai Ba Trung, Ha Noi',
-                              passwowrd: _passwordController.text,
-                              phoneNumber: _phoneController.text));
                         }
                       },
                       style: ButtonStyle(
@@ -344,14 +340,19 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      setState(() {
-        errorMessage = '';
-      });
-      print("Registered user: ${userCredential.user}");
-      AlertDialog(
-        title: Text("Thông báo"),
-        content: Text("Bạn đã đăng ký thành công tài khoản"),
+      userService.registerUser(
+        Person(
+            fullName: _nameController.text,
+            email: _emailController.text,
+            address: 'Le Thanh Nghi, Hai Ba Trung, Ha Noi',
+            passwowrd: _passwordController.text,
+            phoneNumber: _phoneController.text),
       );
+      int id = Random().nextInt(100);
+      List<int> product_id = [];
+      cartService.saveCart(Cart(cart_id: id, email: _emailController.text, product_id: product_id));
+
+      print("Registered user: ${userCredential.user}");
     } catch (e) {
       setState(() {
         errorMessage = e.toString();

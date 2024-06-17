@@ -11,9 +11,6 @@ public class Payment {
     private long payment_id;
     private String paymentMethod;
     private Date paymentDate;
-//    @ManyToOne
-//    @JoinColumn(name = "user_id")
-//    private User user;
 
     public Payment() {
     }

@@ -1,7 +1,6 @@
 package com.datn.food_delivery.controllers;
 
 import com.datn.food_delivery.models.Product;
-import com.datn.food_delivery.repositories.ProductRepository;
 import com.datn.food_delivery.service.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 @Controller
@@ -26,14 +26,16 @@ public class HomeController {
     }
 
     @GetMapping("/create")
-    public String addProduct() throws ExecutionException, InterruptedException {
-        List<Product> products = service.getAllProducts();
+    public String addProduct(){
         return "/products/create";
     }
 
     @PostMapping ("/store")
     public String saveProduct(Product product) throws ExecutionException, InterruptedException {
-        service.saveProdct(product);
+        System.out.println(product.getProduct_id());
+        final Long id = new Random().nextLong();
+        product.setProduct_id(id);
+        service.saveProduct(product);
         return "redirect:/products";
     }
 
