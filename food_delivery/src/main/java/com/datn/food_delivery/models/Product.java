@@ -2,11 +2,11 @@ package com.datn.food_delivery.models;
 
 import jakarta.persistence.*;
 
-@Entity
-@Table(name = "Product")
+//@Entity
+//@Table(name = "Product")
 public class Product {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long product_id;
     private String name;
     private String description;

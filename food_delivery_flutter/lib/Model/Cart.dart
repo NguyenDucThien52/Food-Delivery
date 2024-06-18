@@ -1,17 +1,17 @@
 import 'dart:ffi';
 
 class Cart{
-  final int? cart_id;
-  final String? email;
-  final List<int> product_id;
+  final int cart_id;
+  final String email;
+  final List<int> cartItem_id;
 
-  Cart({this.cart_id, this.email, required this.product_id});
+  Cart({required this.cart_id, required this.email, required this.cartItem_id});
 
   factory Cart.fromJson(Map<String, dynamic> json) {
     return Cart(
       cart_id: json['cart_id'],
       email: json['email'],
-      product_id: List<int>.from(json['product_id']),
+      cartItem_id: List<int>.from(json['cartItem_id']),
     );
   }
 
@@ -19,7 +19,7 @@ class Cart{
     return {
       'cart_id': cart_id,
       'email': email,
-      'product_id': product_id,
+      'cartItem_id': cartItem_id,
     };
   }
 
@@ -27,7 +27,7 @@ class Cart{
     return Cart(
         cart_id: json['cart_id'],
         email: json['email'],
-        product_id: List<int>.from(json['product_id']),
+      cartItem_id: List<int>.from(json['cartItem_id']),
     );
   }
 }

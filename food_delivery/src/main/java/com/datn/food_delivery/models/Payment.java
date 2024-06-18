@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.Date;
 
-@Entity
+//@Entity
 public class Payment {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private long payment_id;
     private String paymentMethod;
     private Date paymentDate;

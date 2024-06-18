@@ -7,6 +7,7 @@ class ProductService {
   final String apiUrl = "http://192.168.1.4:8080/api/products";
 
   Future<List<Product>> fetchProducts() async {
+    print(apiUrl);
     final response = await http.get(Uri.parse(apiUrl));
     if (response.statusCode == 200) {
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
@@ -31,6 +32,7 @@ class ProductService {
   }
 
   Future<int> insertProducts(Product product) async {
+    print('$apiUrl/insert');
     final response = await http.post(
       Uri.parse('$apiUrl/insert'),
       headers: <String, String>{

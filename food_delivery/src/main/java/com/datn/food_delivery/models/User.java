@@ -2,9 +2,9 @@ package com.datn.food_delivery.models;
 
 import jakarta.persistence.*;
 
-@Entity
+//@Entity
 public class User {
-    @Id
+//    @Id
     private String email;
     private String fullName;
     private String password;

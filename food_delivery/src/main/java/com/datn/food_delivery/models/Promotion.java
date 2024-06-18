@@ -7,10 +7,10 @@ import jakarta.persistence.Id;
 
 import java.util.Date;
 
-@Entity
+//@Entity
 public class Promotion {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private long promotion_id;
     private String code;
     private double discount_percentage;

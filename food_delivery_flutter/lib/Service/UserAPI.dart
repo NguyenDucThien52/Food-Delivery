@@ -6,6 +6,7 @@ class UserService {
   static const String _baseUrl = 'http://192.168.1.4:8080/user/save';
 
   Future<void> registerUser(Person person) async {
+    print(_baseUrl);
     final response = await http.post(
       Uri.parse(_baseUrl),
       headers: <String, String>{

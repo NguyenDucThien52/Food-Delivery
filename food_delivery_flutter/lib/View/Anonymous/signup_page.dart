@@ -348,9 +348,7 @@ class _SignUpPageState extends State<SignUpPage> {
             passwowrd: _passwordController.text,
             phoneNumber: _phoneController.text),
       );
-      int id = Random().nextInt(100);
-      List<int> product_id = [];
-      cartService.saveCart(Cart(cart_id: id, email: _emailController.text, product_id: product_id));
+      cartService.saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text, cartItem_id: []));
 
       print("Registered user: ${userCredential.user}");
     } catch (e) {

@@ -1,4 +1,5 @@
 package com.datn.food_delivery.service;
+
 import com.datn.food_delivery.models.Cart;
 import com.datn.food_delivery.models.Product;
 import com.datn.food_delivery.models.User;
@@ -9,9 +10,7 @@ import com.google.protobuf.Api;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -51,7 +50,7 @@ public class FirebaseService {
         List<User> users = new ArrayList<>();
         for(QueryDocumentSnapshot document : documents){
             User user = document.toObject(User.class);
-            user.setEmail(user.getEmail());
+            user.setEmail(document.getId());
             users.add(user);
         }
         return users;

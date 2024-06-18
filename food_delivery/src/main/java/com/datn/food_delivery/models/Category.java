@@ -4,10 +4,10 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
-@Entity
+//@Entity
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private long category_id;
     private String name;
 

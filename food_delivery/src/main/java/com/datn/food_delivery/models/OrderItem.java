@@ -3,10 +3,10 @@ package com.datn.food_delivery.models;
 import jakarta.persistence.*;
 import org.aspectj.weaver.ast.Or;
 
-@Entity
+//@Entity
 public class OrderItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private long orderItem_id;
     private int quantity;
 

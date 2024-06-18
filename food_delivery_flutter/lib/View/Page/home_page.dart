@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:food_delivery/Service/CartAPI.dart';
 import 'package:food_delivery/View/Page/Cart_page.dart';
 import 'package:food_delivery/View/Page/home.dart';
 import 'package:food_delivery/View/Page/shop.dart';
+
+import '../../Model/Cart.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -10,6 +13,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var selectedIndex = 0;
+  late Future<Cart> cart;
+
+  @override
+  void initState(){
+    super.initState();
+    cart = CartService().fetchCart();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,20 +45,31 @@ class _HomePageState extends State<HomePage> {
         child: page,
       ),
     );
-    return Scaffold(
+    return FutureBuilder<Cart>(
+      future: cart,
+      builder:(context, snapshot) {
+        return Scaffold(
           body: mainArea,
           // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
           floatingActionButton: FloatingActionButton(
             // backgroundColor: const Color.fromRGBO(82, 170, 94, 1.0),
             // tooltip: 'Increment',
             shape: const CircleBorder(),
-            onPressed: () {Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page()));},
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id)));
+            },
             child: const Icon(Icons.shopping_cart, size: 28),
           ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-            fixedColor: Theme.of(context).colorScheme.primary,
+            backgroundColor: Theme
+                .of(context)
+                .colorScheme
+                .primaryContainer,
+            fixedColor: Theme
+                .of(context)
+                .colorScheme
+                .primary,
             items: [
               BottomNavigationBarItem(
                 icon: Icon(Icons.home),
@@ -75,6 +96,8 @@ class _HomePageState extends State<HomePage> {
               });
             },
           ),
+        );
+      }
     );
   }
 }

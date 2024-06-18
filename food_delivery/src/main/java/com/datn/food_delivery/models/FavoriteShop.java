@@ -2,10 +2,10 @@ package com.datn.food_delivery.models;
 
 import jakarta.persistence.*;
 
-@Entity
+//@Entity
 public class FavoriteShop {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
     private long favorite_id;
 //    @ManyToOne
 //    @JoinColumn(name = "shop_id")

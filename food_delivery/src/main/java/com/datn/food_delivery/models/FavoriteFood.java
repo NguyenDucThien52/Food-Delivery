@@ -1,17 +1,8 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.*;
-
-@Entity
 public class FavoriteFood {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long favoriteFood_id;
     private int food_id;
-//    @ManyToOne
-//    @JoinColumn(name = "shop_id")
-//    private Shop shop;
-
 
     public FavoriteFood() {
     }

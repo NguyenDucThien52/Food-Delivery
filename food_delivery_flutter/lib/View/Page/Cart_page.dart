@@ -2,33 +2,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Service/CartAPI.dart';
+import 'package:food_delivery/Service/CartItemService.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
+import 'package:food_delivery/View/Page/home_page.dart';
 
+import '../../Model/CartItem.dart';
 import '../../Model/Product.dart';
 import '../../Model/Cart.dart';
 
 class Cart_page extends StatefulWidget {
+  final int cart_id;
+
+  Cart_page({required this.cart_id});
+
   @override
   State<Cart_page> createState() => _Cart_pageState();
 }
 
 class _Cart_pageState extends State<Cart_page> {
-  late Future<Cart> cart;
+  // late Future<Cart> cart;
   late Future<List<Product>> products;
+  late Future<List<CartItem>> cartItems;
+  List<int> product_id = [];
 
   @override
   void initState() {
     super.initState();
-    cart = CartService().fetchCart();
     // Khởi tạo products từ initState bằng cách gọi hàm getProductsByCart.
     products = Future.value([]);
-    cart.then((cartData) {
+    cartItems = CartItemService().fetchCartItemByCart(widget.cart_id);
+    cartItems.then((cartData) {
+      for(CartItem item in cartData){
+        product_id.add(item.product_id);
+      }
       setState(() {
-        products = ProductService().getProductsByCart(cartData.product_id);
+        products = ProductService().getProductsByCart(product_id);
       });
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -65,7 +77,7 @@ class _Cart_pageState extends State<Cart_page> {
                           title: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(product.name),
+                              Text(product.name.toString()),
                             ],
                           ),
                           trailing: SizedBox(

@@ -6,11 +6,11 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 import java.util.Date;
 import java.util.List;
 
-@Entity
-@Table(name = "Orders")
+//@Entity
+//@Table(name = "Orders")
 public class Order {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long order_id;
     private double totalAmount;
     private Date orderDate;

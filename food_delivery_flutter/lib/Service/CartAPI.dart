@@ -11,6 +11,7 @@ class CartService{
 
 
   Future<Cart> fetchCart() async {
+    print('$apiUrl?email=$email');
     final response = await http.get(Uri.parse('$apiUrl?email=$email'));
     print(response.statusCode);
     if (response.statusCode == 200) {
@@ -21,6 +22,7 @@ class CartService{
   }
 
   Future<void> saveCart(Cart cart) async {
+    print('$apiUrl/insert');
     final response = await http.post(
       Uri.parse('$apiUrl/insert'),
       headers: <String, String>{
