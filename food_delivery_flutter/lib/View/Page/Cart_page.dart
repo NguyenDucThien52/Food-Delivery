@@ -13,12 +13,20 @@ class Cart_page extends StatefulWidget {
 }
 
 class _Cart_pageState extends State<Cart_page> {
-  late Future<Cart> carts;
+  late Future<Cart> cart;
+  late Future<List<Product>> products;
 
   @override
   void initState() {
     super.initState();
-    carts = CartService().fetchCart();
+    cart = CartService().fetchCart();
+    // Khởi tạo products từ initState bằng cách gọi hàm getProductsByCart.
+    products = Future.value([]);
+    cart.then((cartData) {
+      setState(() {
+        products = ProductService().getProductsByCart(cartData.product_id);
+      });
+    });
   }
 
   @override
@@ -31,56 +39,61 @@ class _Cart_pageState extends State<Cart_page> {
       body: Column(
         children: [
           Expanded(
-            child: FutureBuilder<Cart>(
-                future: carts,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else {
-                    return ListView.builder(
-                      itemCount: 1,
-                      itemBuilder: (context, index) {
-                        return Padding(
-                          padding: EdgeInsets.symmetric(vertical: 20),
-                          child: ListTile(
-                            leading: Image.network(
-                              "https://loremflickr.com/320/240/foods?random=1",
-                              height: 60,
-                              width: 60,
-                              fit: BoxFit.cover,
-                            ),
-                            title: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+            child: FutureBuilder<List<Product>>(
+              future: products,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(child: Text('No products found in cart'));
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      Product product = snapshot.data![index];
+                      return Padding(
+                        padding: EdgeInsets.symmetric(vertical: 20),
+                        child: ListTile(
+                          leading: Image.network(
+                            "https://loremflickr.com/320/240/foods?random=1",
+                            height: 60,
+                            width: 60,
+                            fit: BoxFit.cover,
+                          ),
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(product.name),
+                            ],
+                          ),
+                          trailing: SizedBox(
+                            width: 80,
+                            child: Row(
                               children: [
-                                Text(snapshot.data!.cart_id.toString()),
+                                Icon(Icons.remove),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8),
+                                  child: Text(
+                                    "1",
+                                    style: TextStyle(fontSize: 17),
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.add,
+                                  color: Colors.blue,
+                                ),
                               ],
                             ),
-                            trailing: SizedBox(
-                              width: 80,
-                              child: Row(
-                                children: [
-                                  Icon(Icons.remove),
-                                  Padding(
-                                      padding: EdgeInsets.symmetric(horizontal: 8),
-                                      child: Text(
-                                        "1",
-                                        style: TextStyle(fontSize: 17),
-                                      )),
-                                  Icon(
-                                    Icons.add,
-                                    color: Colors.blue,
-                                  ),
-                                ],
-                              ),
-                            ),
                           ),
-                        );
-                      },
-                    );
-                  }
-                }),
+                        ),
+                      );
+                    },
+                  );
+                }
+              },
+            ),
           ),
         ],
       ),

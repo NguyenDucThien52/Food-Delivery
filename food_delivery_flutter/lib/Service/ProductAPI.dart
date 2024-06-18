@@ -17,9 +17,18 @@ class ProductService {
     }
   }
 
-  // Future<List<Product>> getProductsByCart() async{
-  //   final reponse = await http.get(Uri.parse('$apiUrl?product_id='));
-  // }
+  Future<List<Product>> getProductsByCart(List<int> product_id) async{
+    String numberString = product_id.join(',');
+    print('$apiUrl/getProductByCart?product_id=$numberString');
+    final response = await http.get(Uri.parse('$apiUrl/getProductByCart?product_id=$numberString'));
+    if(response.statusCode == 200){
+      List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
+      List<Product> products = body.map((dynamic item) => Product.fromJson(item)).toList();
+      return products;
+    }else{
+      throw Exception("Failed to load products");
+    }
+  }
 
   Future<int> insertProducts(Product product) async {
     final response = await http.post(

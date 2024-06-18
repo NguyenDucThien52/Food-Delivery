@@ -40,7 +40,6 @@ public class FirebaseService {
         ApiFuture<QuerySnapshot> future = firestore.collection("carts").whereEqualTo("email",email).limit(1).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         Cart cart = documents.get(0).toObject(Cart.class);
-        System.out.println(cart.getCart_id());
         return cart;
     }
 
@@ -80,8 +79,9 @@ public class FirebaseService {
         List<Product> products = new ArrayList<>();
         for (QueryDocumentSnapshot document : documents){
             Product product = document.toObject(Product.class);
+            product.setProduct_id(Long.parseLong(document.getId()));
             if(product_id.contains(product.getProduct_id())){
-                System.out.println(product.getProduct_id());
+//                System.out.println(product.getProduct_id());
                 products.add(product);
             }
 //            product.setProduct_id(Long.parseLong(document.getId()));
