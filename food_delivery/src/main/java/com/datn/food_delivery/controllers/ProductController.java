@@ -30,22 +30,6 @@ public class ProductController {
     List<Product> getProductsByCart(@RequestParam List<Long> product_id) throws  ExecutionException, InterruptedException{
         return firebaseService.getProductsByCart(product_id);
     }
-
-//    @GetMapping("/{id}")
-//    ResponseEntity<ResponseObject> findById(@PathVariable Long id){
-//        Optional<Product> product = repository.findById(id);
-//        return product.isEmpty() ?
-//                ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseObject("404", "Can't not find product with id = " + id, ""))
-//                : ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", "Query product successfully", product));
-//
-//    }
-
-//
-//    @DeleteMapping("/delete/{id}")
-//    ResponseEntity<ResponseObject> deleteProduct(@RequestBody Product product){
-//        Long id = product.getProduct_id();
-//        return ResponseEntity.status(HttpStatus.OK).body(new ResponseObject("200", "Delete product " + product.getProduct_id() + " successfully", product));
-//    }
 }
 
 

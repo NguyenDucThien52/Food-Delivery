@@ -14,6 +14,11 @@
     <h1 class="text-center">Create Products</h1>
     <form action="#" th:action="@{update}" th:object="${product}" method="post">
         <div class="mb-3">
+            <label for="Name" class="form-label">product_id</label>
+            <input type="text" class="form-control" name="product_id" id="product_id" aria-describedby="helpId"
+                   placeholder="Name" field="*{product_id}" th:value="${product.product_id}" readonly/>
+        </div>
+        <div class="mb-3">
             <label for="Name" class="form-label">Name</label>
             <input type="text" class="form-control" name="Name" id="Name" aria-describedby="helpId"
                    placeholder="Name" field="*{name}" th:value="${product.name}"/>

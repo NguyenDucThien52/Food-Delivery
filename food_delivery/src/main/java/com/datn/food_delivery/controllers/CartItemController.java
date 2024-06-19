@@ -17,7 +17,7 @@ public class CartItemController {
     private CartItemService cartItemService;
 
     @GetMapping("")
-    CartItem getCartItem(@RequestParam Long product_id, Long cart_id) throws ExecutionException, InterruptedException{
+    CartItem getCartItem(@RequestParam Long product_id,@RequestParam Long cart_id) throws ExecutionException, InterruptedException{
         return cartItemService.getCartItem(product_id, cart_id);
     }
 
@@ -29,5 +29,11 @@ public class CartItemController {
     @PostMapping("/insert")
     void insertCartItem(@RequestBody CartItem cartItem) throws ExecutionException, InterruptedException{
         cartItemService.saveCartItem(cartItem);
+    }
+
+    @DeleteMapping("/delete")
+    void deleteCartItem(@RequestParam Long cartItem_id) throws ExecutionException, InterruptedException{
+        System.out.println(cartItem_id);
+        cartItemService.deleteCartItem(cartItem_id);
     }
 }

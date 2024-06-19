@@ -5,12 +5,19 @@ import com.datn.food_delivery.models.Product;
 import com.datn.food_delivery.models.User;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
+import com.google.cloud.storage.Acl;
+import com.google.cloud.storage.Blob;
+import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.cloud.StorageClient;
 import com.google.protobuf.Api;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 @Service
@@ -70,6 +77,23 @@ public class FirebaseService {
         return products;
     }
 
+    public String uploadFile(MultipartFile file) throws IOException {
+        Bucket bucket = StorageClient.getInstance().bucket();
+        String blobName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
+        Blob blob = bucket.create(blobName, file.getBytes(), file.getContentType());
+
+        blob.createAcl(Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+
+        return blob.getMediaLink();
+    }
+
+    public Product getProductByid(long prooduct_id) throws InterruptedException, ExecutionException{
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> future = firestore.collection("products").whereEqualTo("product_id", prooduct_id).get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+        return documents.get(0).toObject(Product.class);
+    }
+
     public List<Product> getProductsByCart(List<Long> product_id) throws InterruptedException, ExecutionException {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = firestore.collection("products").get();
@@ -80,12 +104,14 @@ public class FirebaseService {
             Product product = document.toObject(Product.class);
             product.setProduct_id(Long.parseLong(document.getId()));
             if(product_id.contains(product.getProduct_id())){
-//                System.out.println(product.getProduct_id());
                 products.add(product);
             }
-//            product.setProduct_id(Long.parseLong(document.getId()));
-//            products.add(product);
         }
         return products;
+    }
+
+    public void deleteProduct(Long product_id) throws  InterruptedException, ExecutionException{
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> future = firestore.collection("products").document(product_id.toString()).delete();
     }
 }

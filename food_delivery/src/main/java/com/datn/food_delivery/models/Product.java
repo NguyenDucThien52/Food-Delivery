@@ -17,23 +17,19 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name) {
-        this.name = name;
-    }
-
-    public Product(String name, String description, double price, String imageURL) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.imageURL = imageURL;
-    }
-
-    public Product(long product_id, String name, String description, double price, String imageURL) {
+    public Product(Long product_id, String name, String description, double price, String imageURL) {
         this.product_id = product_id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageURL = imageURL;
+    }
+
+    public Product(Long product_id, String name, String description, double price) {
+        this.product_id = product_id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
     }
 
     public long getProduct_id() {

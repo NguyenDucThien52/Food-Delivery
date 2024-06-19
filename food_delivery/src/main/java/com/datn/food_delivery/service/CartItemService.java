@@ -1,5 +1,6 @@
 package com.datn.food_delivery.service;
 
+import com.datn.food_delivery.models.Cart;
 import com.datn.food_delivery.models.CartItem;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
@@ -25,10 +26,13 @@ public class CartItemService {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = firestore
                 .collection("cartitems")
+                .whereEqualTo("cart_id", cart_id)
                 .whereEqualTo("product_id", product_id)
-                .whereEqualTo("cart_id", cart_id).limit(1).get();
+                .get();
         List<QueryDocumentSnapshot> document = future.get().getDocuments();
-        CartItem cartItem = document.get(0).toObject(CartItem.class);
+        if(document.isEmpty()){
+            return new CartItem(0L, 0 , 0L, 0L);
+        }
         return document.get(0).toObject(CartItem.class);
     }
 
@@ -46,5 +50,10 @@ public class CartItemService {
             cartItems.add(cartItem);
         }
         return cartItems;
+    }
+
+    public void deleteCartItem(Long cartItem_id) throws InterruptedException, ExecutionException{
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<WriteResult> future = firestore.collection("cartitems").document(cartItem_id.toString()).delete();
     }
 }

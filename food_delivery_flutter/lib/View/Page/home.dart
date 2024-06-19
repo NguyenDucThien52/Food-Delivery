@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Model/CartItem.dart';
 import 'package:food_delivery/Service/CartAPI.dart';
-import 'package:food_delivery/Service/CartItemService.dart';
+import 'package:food_delivery/Service/CartItemAPI.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
 
 import '../../Model/Cart.dart';
@@ -140,9 +140,14 @@ class _HomeState extends State<Home> {
                                                                 List<int>? cartItem_id = cartSnapshot.data!.cartItem_id;
                                                                 int cartItemid = DateTime.now().millisecondsSinceEpoch;
                                                                 cartItem_id.add(cartItemid);
-                                                                CartItemService().fetchCartItem(product.product_id, cartSnapshot.data!.cart_id);
-                                                                CartItemService().saveCartItem(CartItem(cart_id: cartSnapshot.data!.cart_id, quantity: 1, product_id: product.product_id, cartItem_id: cartItemid));
-                                                                CartService().saveCart(Cart(cart_id: cartSnapshot.data!.cart_id, email: cartSnapshot.data!.email, cartItem_id: cartItem_id));
+                                                                CartItemService().fetchCartItem(product.product_id, cartSnapshot.data!.cart_id).then((value){
+                                                                  if(value.quantity==0){
+                                                                    CartItemService().saveCartItem(CartItem(cart_id: cartSnapshot.data!.cart_id, quantity: 1, product_id: product.product_id, cartItem_id: cartItemid));
+                                                                    CartService().saveCart(Cart(cart_id: cartSnapshot.data!.cart_id, email: cartSnapshot.data!.email, cartItem_id: cartItem_id));
+                                                                  }else{
+                                                                    CartItemService().saveCartItem(CartItem(cart_id: cartSnapshot.data!.cart_id, quantity: (value.quantity+1), product_id: product.product_id, cartItem_id: value.cartItem_id));
+                                                                  }
+                                                                });
                                                               },
                                                               icon: Icon(
                                                                 Icons.add_circle_outline,
