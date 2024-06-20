@@ -9,6 +9,13 @@ public class ProductDTO {
     private double price;
     private MultipartFile imageURL;
 
+    public ProductDTO(Long productId, String name, String description, double price) {
+        this.productId = productId;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+    }
+
     // Getter và Setter cho các thuộc tính
     public Long getProductId() {
         return productId;

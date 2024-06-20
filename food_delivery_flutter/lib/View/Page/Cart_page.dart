@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,6 +25,8 @@ class _Cart_pageState extends State<Cart_page> {
   late Future<List<Product>> products;
   late Future<List<CartItem>> cartItems;
   List<int> product_id = [];
+  List<int> quantitys = [];
+  double total = 0;
 
   @override
   void initState() {
@@ -32,9 +36,16 @@ class _Cart_pageState extends State<Cart_page> {
     cartItems.then((cartData) {
       for (CartItem item in cartData) {
         product_id.add(item.product_id);
+        quantitys.add(item.quantity);
       }
       setState(() {
         products = ProductService().getProductsByCart(product_id);
+      });
+      products.then((productData) {
+        for (int i = 0; i < cartData.length; i++) {
+          print(cartData[i].quantity.toString() + "  " + productData[i].price.toString());
+          total += productData[i].price * cartData[i].quantity;
+        }
       });
     });
   }
@@ -44,7 +55,7 @@ class _Cart_pageState extends State<Cart_page> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Cart"),
-        backgroundColor: Colors.transparent,
+        // backgroundColor: Colors.transparent,
       ),
       body: Column(
         children: [
@@ -65,17 +76,20 @@ class _Cart_pageState extends State<Cart_page> {
                         return Column(
                           children: [
                             SizedBox(
-                              height: 700,
+                              height: 600,
                               child: ListView.builder(
                                 itemCount: snapshot.data!.length,
                                 itemBuilder: (context, index) {
                                   CartItem cartItem = cartItemSnapshot.data![index];
                                   Product product = snapshot.data![index];
+                                  // total += (cartItem.quantity * product.price);
+                                  // total = total + int.parse((cartItem.quantity * product.price).toString());
                                   return Padding(
                                     padding: EdgeInsets.symmetric(vertical: 20),
                                     child: ListTile(
+                                      contentPadding: EdgeInsets.symmetric(horizontal: 10),
                                       leading: Image.network(
-                                        "https://loremflickr.com/320/240/foods?random=1",
+                                        product.imageURL,
                                         height: 60,
                                         width: 60,
                                         fit: BoxFit.cover,
@@ -83,7 +97,11 @@ class _Cart_pageState extends State<Cart_page> {
                                       title: Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          Text(product.name.toString()),
+                                          Text(
+                                            product.name.toString(),
+                                            style: TextStyle(fontSize: 19),
+                                          ),
+                                          Text(product.price.toString()),
                                         ],
                                       ),
                                       trailing: SizedBox(
@@ -94,16 +112,19 @@ class _Cart_pageState extends State<Cart_page> {
                                                 onPressed: () {
                                                   if (cartItem.quantity > 1) {
                                                     setState(() {
+                                                      cartItem.quantity -= 1;
                                                       CartItemService().saveCartItem(CartItem(
                                                           cart_id: cartItem.cart_id,
-                                                          quantity: (cartItem.quantity - 1),
+                                                          quantity: cartItem.quantity,
                                                           product_id: product.product_id,
                                                           cartItem_id: cartItem.cartItem_id));
                                                     });
                                                   } else {
                                                     setState(() {
-                                                      CartItemService().deleteCartItem(cartItem.cartItem_id);
+                                                      snapshot.data!.removeAt(index);
+                                                      cartItemSnapshot.data!.removeAt(index);
                                                     });
+                                                    CartItemService().deleteCartItem(cartItem.cartItem_id);
                                                   }
                                                 },
                                                 icon: Icon(
@@ -115,17 +136,21 @@ class _Cart_pageState extends State<Cart_page> {
                                               style: TextStyle(fontSize: 17),
                                             ),
                                             IconButton(
-                                                onPressed: () {
+                                              onPressed: () {
+                                                setState(() {
+                                                  cartItem.quantity += 1;
                                                   CartItemService().saveCartItem(CartItem(
                                                       cart_id: cartItem.cart_id,
-                                                      quantity: (cartItem.quantity + 1),
+                                                      quantity: (cartItem.quantity),
                                                       product_id: product.product_id,
                                                       cartItem_id: cartItem.cartItem_id));
-                                                },
-                                                icon: Icon(
-                                                  Icons.add,
-                                                  color: Colors.blue,
-                                                )),
+                                                });
+                                              },
+                                              icon: Icon(
+                                                Icons.add,
+                                                color: Colors.blue,
+                                              ),
+                                            ),
                                           ],
                                         ),
                                       ),
@@ -134,6 +159,17 @@ class _Cart_pageState extends State<Cart_page> {
                                 },
                               ),
                             ),
+                            SizedBox(
+                                width: 350,
+                                height: 50,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [Text(
+                                    "Total: $total",
+                                    style: TextStyle(fontSize: 20),
+                                  ),]
+                                )),
+                            ElevatedButton(onPressed: () {}, child: Text("Thanh Toán")),
                           ],
                         );
                       }

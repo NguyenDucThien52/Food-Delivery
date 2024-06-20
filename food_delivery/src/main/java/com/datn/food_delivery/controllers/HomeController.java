@@ -35,7 +35,6 @@ public class HomeController {
 
     @PostMapping ("/store")
     public String saveProduct(ProductDTO productDTO) throws ExecutionException, InterruptedException, IOException {
-//        System.out.println(productDTO.getProduct_id());
         final Long id = new Random().nextLong(100000);
         productDTO.setProductId(id);
         String imageURL = service.uploadFile(productDTO.getImageURL());
@@ -47,12 +46,16 @@ public class HomeController {
     @GetMapping("/edit/{id}")
     public String editProduct(@PathVariable("id") long id, Model model) throws ExecutionException, InterruptedException {
         Product product = service.getProductByid(id);
-        model.addAttribute("product", product);
+        ProductDTO productDTO = new ProductDTO(product.getProduct_id(), product.getName(), product.getDescription(), product.getPrice());
+        model.addAttribute("productDTO", productDTO);
         return "products/edit";
     }
 
     @PostMapping("/edit/update")
-    public String updateProduct(Product product) throws ExecutionException, InterruptedException {
+    public String updateProduct(ProductDTO productDTO) throws ExecutionException, InterruptedException, IOException {
+        System.out.println(productDTO.getProductId() + "\n" + productDTO.getDescription() + "\n" + productDTO.getPrice());
+        String imageURL = service.uploadFile(productDTO.getImageURL());
+        Product product = new Product(productDTO.getProductId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), imageURL);
         service.saveProduct(product);
         return "redirect:/products";
     }

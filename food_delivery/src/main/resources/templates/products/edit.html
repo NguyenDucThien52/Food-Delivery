@@ -12,29 +12,30 @@
 <body>
 <div class="container">
     <h1 class="text-center">Create Products</h1>
-    <form action="#" th:action="@{update}" th:object="${product}" method="post">
+    <form action="#" th:action="@{update}" th:object="${ProductDTO}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
-            <label for="Name" class="form-label">product_id</label>
-            <input type="text" class="form-control" name="product_id" id="product_id" aria-describedby="helpId"
-                   placeholder="Name" field="*{product_id}" th:value="${product.product_id}" readonly/>
+            <label for="productId" class="form-label">product_id</label>
+            <input type="text" class="form-control" name="productId" id="productId" aria-describedby="helpId"
+                   placeholder="ID" field="*{productId}" th:value="${productDTO.productId}" readonly/>
         </div>
         <div class="mb-3">
             <label for="Name" class="form-label">Name</label>
             <input type="text" class="form-control" name="Name" id="Name" aria-describedby="helpId"
-                   placeholder="Name" field="*{name}" th:value="${product.name}"/>
+                   placeholder="Name" field="*{name}" th:value="${productDTO.name}"/>
         </div>
         <div class="mb-3">
-            <label for="Price" class="form-label">Price</label>
-            <input type="text" class="form-control" name="Price" id="Price" aria-describedby="helpId"
-                   placeholder="Price" field="*{price}" th:value="${product.price}">
+            <label for="price" class="form-label">Price</label>
+            <input type="text" class="form-control" name="price" id="price" aria-describedby="helpId"
+                   placeholder="Price" field="*{price}" th:value="${productDTO.price}">
         </div>
 
         <div class="mb-3">
             <label for="Description" class="form-label">Description</label>
-            <textarea class="form-control" name="Description" id="Description" rows="3" field="*{description}" th:text="${product.description}"></textarea>
+            <textarea class="form-control" name="Description" id="Description" rows="3" field="*{description}" th:text="${productDTO.description}"></textarea>
         </div>
         <div class="mb-3">
-            <input type="file" id="ImageURL" name="ImageURL">
+            <label for="imageURL" class="form-label">Image</label>
+            <input type="file" id="imageURL" name="imageURL" field="*{imageURL}">
         </div>
         <button type="submit" class="btn-success btn-lg">Submit</button>
     </form>

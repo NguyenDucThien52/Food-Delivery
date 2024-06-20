@@ -98,7 +98,7 @@ class _HomeState extends State<Home> {
                                                 crossAxisAlignment: CrossAxisAlignment.start,
                                                 children: [
                                                   Image.network(
-                                                    "https://loremflickr.com/320/240/foods?random=1",
+                                                    product.imageURL,
                                                     height: 200,
                                                     width: double.infinity,
                                                     fit: BoxFit.cover,
@@ -186,7 +186,7 @@ class _HomeState extends State<Home> {
                                                 .background,
                                             child: ListTile(
                                               leading: Image.network(
-                                                "https://loremflickr.com/320/240/foods?random=1",
+                                                snapshot.data![i].imageURL,
                                                 height: 60,
                                                 width: 60,
                                                 fit: BoxFit.cover,

@@ -5,7 +5,7 @@ class Product{
   final String name;
   final String description;
   final double price;
-  final String? imageURL;
+  final String imageURL;
 
   Product({required this.product_id, this.name='', this.description='', this.price=0, this.imageURL=''});
 

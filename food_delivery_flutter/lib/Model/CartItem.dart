@@ -1,6 +1,6 @@
 class CartItem{
   final int cartItem_id;
-  final int quantity;
+  int quantity;
   final int product_id;
   final int cart_id;
 
