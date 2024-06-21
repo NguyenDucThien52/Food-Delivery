@@ -15,23 +15,38 @@ public class Order {
     private double totalAmount;
     private Date orderDate;
     private String deliveryAddress;
-//    @ManyToOne
-//    private User user;
-//    @ManyToOne
-//    @JoinColumn(name = "promotion_id")
-//    private Promotion promotion;
-//    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<OrderItem> orderItems;
+    private String paymentMethod;
+    private String email;
 
     public Order() {
     }
 
-    public Order(double totalAmount, Date orderDate, String deliveryAddress) {
+    public Order(double totalAmount, Date orderDate, String deliveryAddress, String email) {
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
         this.deliveryAddress = deliveryAddress;
+        this.email = email;
     }
 
+    public void setOrder_id(Long order_id) {
+        this.order_id = order_id;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
     public long getOrder_id() {
         return order_id;

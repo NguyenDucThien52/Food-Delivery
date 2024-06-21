@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Service/CartAPI.dart';
 import 'package:food_delivery/Service/CartItemAPI.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
+import 'package:food_delivery/View/Page/Order_page.dart';
 import 'package:food_delivery/View/Page/home_page.dart';
 
 import '../../Model/CartItem.dart';
@@ -54,7 +55,7 @@ class _Cart_pageState extends State<Cart_page> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cart"),
+        title: Text("Giỏ hàng", style: TextStyle(fontWeight: FontWeight.bold),),
         // backgroundColor: Colors.transparent,
       ),
       body: Column(
@@ -82,8 +83,6 @@ class _Cart_pageState extends State<Cart_page> {
                                 itemBuilder: (context, index) {
                                   CartItem cartItem = cartItemSnapshot.data![index];
                                   Product product = snapshot.data![index];
-                                  // total += (cartItem.quantity * product.price);
-                                  // total = total + int.parse((cartItem.quantity * product.price).toString());
                                   return Padding(
                                     padding: EdgeInsets.symmetric(vertical: 20),
                                     child: ListTile(
@@ -126,6 +125,7 @@ class _Cart_pageState extends State<Cart_page> {
                                                     });
                                                     CartItemService().deleteCartItem(cartItem.cartItem_id);
                                                   }
+                                                  total -= product.price;
                                                 },
                                                 icon: Icon(
                                                   Icons.remove,
@@ -144,6 +144,7 @@ class _Cart_pageState extends State<Cart_page> {
                                                       quantity: (cartItem.quantity),
                                                       product_id: product.product_id,
                                                       cartItem_id: cartItem.cartItem_id));
+                                                  total += product.price;
                                                 });
                                               },
                                               icon: Icon(
@@ -169,7 +170,10 @@ class _Cart_pageState extends State<Cart_page> {
                                     style: TextStyle(fontSize: 20),
                                   ),]
                                 )),
-                            ElevatedButton(onPressed: () {}, child: Text("Thanh Toán")),
+                            ElevatedButton(onPressed: () {
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Order_page(total: total)));
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id)));
+                            }, child: Text("Thanh Toán")),
                           ],
                         );
                       }

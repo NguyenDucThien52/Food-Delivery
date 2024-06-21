@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class CartItemService {
 
-    public void saveCartItem(CartItem cartItem) throws InterruptedException, ExecutionException{
+    public void saveCartItem(CartItem cartItem){
         Firestore firestore = FirestoreClient.getFirestore();
         DocumentReference docRef = firestore
                 .collection("cartitems")
@@ -52,7 +52,7 @@ public class CartItemService {
         return cartItems;
     }
 
-    public void deleteCartItem(Long cartItem_id) throws InterruptedException, ExecutionException{
+    public void deleteCartItem(Long cartItem_id){
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> future = firestore.collection("cartitems").document(cartItem_id.toString()).delete();
     }
