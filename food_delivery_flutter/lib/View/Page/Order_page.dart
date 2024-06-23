@@ -1,11 +1,21 @@
+import 'dart:ffi';
+
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:food_delivery/Model/Receiver.dart';
+import 'package:food_delivery/Service/OrderAPI.dart';
+import 'package:food_delivery/Service/ReceiverAPI.dart';
+
+import '../../Model/Order.dart';
+import '../../Model/User.dart';
 
 class Order_page extends StatefulWidget {
   final double total;
+  final Person user;
 
-  const Order_page({super.key, required this.total});
+  const Order_page({super.key, required this.total, required this.user});
 
   @override
   State<Order_page> createState() => _Order_pageState();
@@ -14,6 +24,53 @@ class Order_page extends StatefulWidget {
 class _Order_pageState extends State<Order_page> {
   int _selectedValue = 1;
   TextEditingController _addressController = TextEditingController();
+  TextEditingController _nameController = TextEditingController();
+  TextEditingController _phoneNumberController = TextEditingController();
+
+  void _showPopup(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Thông tin người nhận",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          content: SizedBox(
+            height: 200,
+            width: 350,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(
+                  height: 10,
+                ),
+                Text("Tên người nhận"),
+                TextFormField(controller: _nameController),
+                Text("Số điện thoại"),
+                TextField(controller: _phoneNumberController)
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cập nhật'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _nameController.text = widget.user.fullName;
+    _phoneNumberController.text = widget.user.phoneNumber;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +200,29 @@ class _Order_pageState extends State<Order_page> {
                 ),
               ),
               SizedBox(height: 40),
+              SizedBox(
+                height: 60,
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          print(_nameController);
+                          _showPopup(context);
+                        },
+                        child: Container(
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: Colors.red,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
@@ -153,10 +233,26 @@ class _Order_pageState extends State<Order_page> {
               TextField(
                 controller: _addressController,
               ),
-              SizedBox(height: 50,),
+              SizedBox(
+                height: 50,
+              ),
               ElevatedButton(
                 onPressed: () {
-
+                  int id = DateTime.now().millisecondsSinceEpoch;
+                  ReceiverSerice().insertReceiver(Receiver(
+                      receiver_id: id,
+                      receiver_name: _nameController.text,
+                      receiver_phone: _phoneNumberController.text));
+                  DateTime dateTime = DateTime.now();
+                  OrderService().insertOrder(Order(
+                      email: widget.user.email,
+                      deliveryAddress: _addressController.text,
+                      order_id: id,
+                      orderDate: dateTime,
+                      totalAmount: Total,
+                      paymentMethod:
+                          _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
+                      receiver_id: id));
                 },
                 child: Text("Thanh Toán"),
               ),

@@ -23,11 +23,6 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class FirebaseService {
 
-    public void saveUser(User user) throws InterruptedException, ExecutionException {
-        Firestore firestore = FirestoreClient.getFirestore();
-        DocumentReference docRef = firestore.collection("users").document(user.getEmail());
-        ApiFuture<WriteResult> Result = docRef.set(user);
-    }
     public void saveProduct(Product product) throws InterruptedException, ExecutionException {
         Firestore firestore = FirestoreClient.getFirestore();
         DocumentReference docRef = firestore.collection("products").document(String.valueOf(product.getProduct_id()));

@@ -12,11 +12,13 @@ import 'package:food_delivery/View/Page/home_page.dart';
 import '../../Model/CartItem.dart';
 import '../../Model/Product.dart';
 import '../../Model/Cart.dart';
+import '../../Model/User.dart';
 
 class Cart_page extends StatefulWidget {
+  final Person user;
   final int cart_id;
 
-  Cart_page({required this.cart_id});
+  Cart_page({required this.cart_id, required this.user});
 
   @override
   State<Cart_page> createState() => _Cart_pageState();
@@ -32,6 +34,7 @@ class _Cart_pageState extends State<Cart_page> {
   @override
   void initState() {
     super.initState();
+    print(widget.user.email);
     products = Future.value([]);
     cartItems = CartItemService().fetchCartItemByCart(widget.cart_id);
     cartItems.then((cartData) {
@@ -171,7 +174,7 @@ class _Cart_pageState extends State<Cart_page> {
                                   ),]
                                 )),
                             ElevatedButton(onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Order_page(total: total)));
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Order_page(total: total, user: widget.user)));
                               // Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id)));
                             }, child: Text("Thanh Toán")),
                           ],

@@ -345,7 +345,6 @@ class _SignUpPageState extends State<SignUpPage> {
             fullName: _nameController.text,
             email: _emailController.text,
             address: 'Le Thanh Nghi, Hai Ba Trung, Ha Noi',
-            passwowrd: _passwordController.text,
             phoneNumber: _phoneController.text),
       );
       cartService.saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text, cartItem_id: []));

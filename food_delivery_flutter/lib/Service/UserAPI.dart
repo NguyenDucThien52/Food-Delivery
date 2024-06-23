@@ -3,12 +3,12 @@ import 'package:food_delivery/Model/User.dart';
 import 'package:http/http.dart' as http;
 
 class UserService {
-  static const String _baseUrl = 'http://192.168.1.4:8080/user/save';
+  String apiUrl = 'http://192.168.1.4:8080/api/users';
 
   Future<void> registerUser(Person person) async {
-    print(_baseUrl);
+    print('$apiUrl/insert');
     final response = await http.post(
-      Uri.parse(_baseUrl),
+      Uri.parse('$apiUrl/insert'),
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
@@ -19,6 +19,16 @@ class UserService {
       print("Create account " + response.body + " Successfully");
     } else {
       throw Exception('Failed to register user');
+    }
+  }
+  
+  Future<Person> getUser(String? email) async{
+    print('$apiUrl?email=$email');
+    final response = await http.get(Uri.parse('$apiUrl?email=$email'));
+    if(response.statusCode == 200){
+      return Person.fromJson(json.decode(response.body));
+    }else{
+      throw Exception("Failed to load user");
     }
   }
 }

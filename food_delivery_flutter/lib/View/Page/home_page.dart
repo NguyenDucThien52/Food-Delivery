@@ -1,5 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:food_delivery/Model/User.dart';
 import 'package:food_delivery/Service/CartAPI.dart';
+import 'package:food_delivery/Service/UserAPI.dart';
 import 'package:food_delivery/View/Page/Cart_page.dart';
 import 'package:food_delivery/View/Page/home.dart';
 import 'package:food_delivery/View/Page/shop.dart';
@@ -14,11 +17,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var selectedIndex = 0;
   late Future<Cart> cart;
+  late Person user;
+  late Future<Person> person;
 
   @override
   void initState(){
     super.initState();
     cart = CartService().fetchCart();
+    person = UserService().getUser(FirebaseAuth.instance.currentUser!.email);
+    person.then((value) {
+      user = Person(email: value.email, phoneNumber: value.phoneNumber, address: value.address, fullName: value.fullName);
+    });
   }
 
   @override
@@ -56,7 +65,7 @@ class _HomePageState extends State<HomePage> {
             // tooltip: 'Increment',
             shape: const CircleBorder(),
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id)));
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id, user: user)));
             },
             child: const Icon(Icons.shopping_cart, size: 28),
           ),

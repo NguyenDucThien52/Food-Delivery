@@ -6,30 +6,35 @@ import org.springframework.boot.autoconfigure.web.WebProperties;
 import java.util.Date;
 import java.util.List;
 
-//@Entity
-//@Table(name = "Orders")
 public class Order {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long order_id;
     private double totalAmount;
     private Date orderDate;
     private String deliveryAddress;
     private String paymentMethod;
     private String email;
+    private Long receiver_id;
 
     public Order() {
     }
 
-    public Order(double totalAmount, Date orderDate, String deliveryAddress, String email) {
+    public Order(Long order_id, double totalAmount, Date orderDate, String deliveryAddress, String paymentMethod, String email, Long receiver_id) {
+        this.order_id = order_id;
         this.totalAmount = totalAmount;
         this.orderDate = orderDate;
         this.deliveryAddress = deliveryAddress;
+        this.paymentMethod = paymentMethod;
         this.email = email;
+        this.receiver_id = receiver_id;
     }
 
-    public void setOrder_id(Long order_id) {
-        this.order_id = order_id;
+
+    public Long getReceiver_id() {
+        return receiver_id;
+    }
+
+    public void setReceiver_id(Long receiver_id) {
+        this.receiver_id = receiver_id;
     }
 
     public String getPaymentMethod() {

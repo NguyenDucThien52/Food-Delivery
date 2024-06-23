@@ -17,7 +17,7 @@ class CartService{
     if (response.statusCode == 200) {
       return Cart.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load carts');
+      throw Exception('Failed to load order');
     }
   }
 
@@ -32,9 +32,9 @@ class CartService{
     );
 
     if (response.statusCode == 200) {
-      print("Create cart " + response.body + " Successfully");
+      print("Create order " + response.body + " Successfully");
     } else {
-      throw Exception('Failed to create cart');
+      throw Exception('Failed to create order');
     }
   }
 }

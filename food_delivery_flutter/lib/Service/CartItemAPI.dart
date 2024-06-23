@@ -17,7 +17,6 @@ class CartItemService{
   }
 
   Future<List<CartItem>> fetchCartItemByCart(int cart_id) async{
-    print(cart_id);
     print('$apiURL/getcartitemsbycart?cart_id=$cart_id');
     final response= await http.get(Uri.parse('$apiURL/getcartitemsbycart?cart_id=$cart_id'));
     if(response.statusCode == 200){

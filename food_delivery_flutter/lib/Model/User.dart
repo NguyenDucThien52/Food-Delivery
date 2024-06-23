@@ -4,17 +4,15 @@ class Person{
   final String fullName;
   final String email;
   final String phoneNumber;
-  final String passwowrd;
   final String address;
 
-  Person({this.fullName='', this. email='', this.phoneNumber='', this.passwowrd='', this.address=''});
+  Person({this.fullName='', this. email='', this.phoneNumber='', this.address=''});
 
   factory Person.toJson(Map<String, dynamic> json){
     return Person(
         fullName: json['fullName'],
         email: json['email'],
         phoneNumber: json['phoneNumber'],
-        passwowrd: json['password'],
         address: json['address'],
     );
   }
@@ -23,7 +21,6 @@ class Person{
       'fullName': fullName,
       'email': email,
       'phoneNumber': phoneNumber,
-      'passwowrd': passwowrd,
       'address': address,
     };
   }
@@ -33,7 +30,6 @@ class Person{
       fullName: json['fullName'],
       email: json['email'],
       phoneNumber: json['phoneNumber'],
-      passwowrd: json['password'],
       address: json['address'],
     );
   }
