@@ -27,6 +27,8 @@ class Cart_page extends StatefulWidget {
 class _Cart_pageState extends State<Cart_page> {
   late Future<List<Product>> products;
   late Future<List<CartItem>> cartItems;
+  late List<CartItem> cartItemsList;
+  List<Product> productList = [];
   List<int> product_id = [];
   List<int> quantitys = [];
   double total = 0;
@@ -38,16 +40,17 @@ class _Cart_pageState extends State<Cart_page> {
     products = Future.value([]);
     cartItems = CartItemService().fetchCartItemByCart(widget.cart_id);
     cartItems.then((cartData) {
+      cartItemsList = cartData;
       for (CartItem item in cartData) {
         product_id.add(item.product_id);
         quantitys.add(item.quantity);
       }
       setState(() {
-        products = ProductService().getProductsByCart(product_id);
+        products = ProductService().getProductsByCartItem(product_id);
       });
       products.then((productData) {
+        productList = productData;
         for (int i = 0; i < cartData.length; i++) {
-          print(cartData[i].quantity.toString() + "  " + productData[i].price.toString());
           total += productData[i].price * cartData[i].quantity;
         }
       });
@@ -174,8 +177,8 @@ class _Cart_pageState extends State<Cart_page> {
                                   ),]
                                 )),
                             ElevatedButton(onPressed: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => Order_page(total: total, user: widget.user)));
-                              // Navigator.push(context, MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id)));
+                              print(cartItemsList);
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => Order_page(total: total, user: widget.user, cartItemsList: cartItemsList, productList: productList)));
                             }, child: Text("Thanh Toán")),
                           ],
                         );

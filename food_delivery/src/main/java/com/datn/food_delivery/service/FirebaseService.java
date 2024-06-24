@@ -10,7 +10,6 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
-import com.google.protobuf.Api;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -38,9 +37,13 @@ public class FirebaseService {
 
     public Cart getCart(String email) throws ExecutionException, InterruptedException{
         Firestore firestore = FirestoreClient.getFirestore();
+        System.out.println(email);
+        ApiFuture<QuerySnapshot> userFutures = firestore.collection("users").whereEqualTo("email", email).get();
+        List<QueryDocumentSnapshot> document = userFutures.get().getDocuments();
         ApiFuture<QuerySnapshot> future = firestore.collection("carts").whereEqualTo("email",email).limit(1).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         Cart cart = documents.get(0).toObject(Cart.class);
+        System.out.println(cart.getCart_id());
         return cart;
     }
 
@@ -89,7 +92,7 @@ public class FirebaseService {
         return documents.get(0).toObject(Product.class);
     }
 
-    public List<Product> getProductsByCart(List<Long> product_id) throws InterruptedException, ExecutionException {
+    public List<Product> getProductsByCartItem(List<Long> product_id) throws InterruptedException, ExecutionException {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = firestore.collection("products").get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();

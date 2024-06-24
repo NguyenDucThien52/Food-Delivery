@@ -13,11 +13,10 @@ class CartService{
   Future<Cart> fetchCart() async {
     print('$apiUrl?email=$email');
     final response = await http.get(Uri.parse('$apiUrl?email=$email'));
-    print(response.statusCode);
     if (response.statusCode == 200) {
       return Cart.fromJson(json.decode(response.body));
     } else {
-      throw Exception('Failed to load order');
+      throw Exception('Failed to load cart');
     }
   }
 
@@ -34,7 +33,7 @@ class CartService{
     if (response.statusCode == 200) {
       print("Create order " + response.body + " Successfully");
     } else {
-      throw Exception('Failed to create order');
+      throw Exception('Failed to create cart');
     }
   }
 }

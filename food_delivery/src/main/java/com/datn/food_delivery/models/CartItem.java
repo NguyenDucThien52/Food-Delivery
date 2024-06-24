@@ -6,8 +6,7 @@ public class CartItem {
     private Long product_id;
     private Long cart_id;
 
-    public CartItem() {
-    }
+    CartItem(){};
 
     public CartItem(Long cartItem_id, int quantity, Long product_id, Long cart_id) {
         CartItem_id = cartItem_id;

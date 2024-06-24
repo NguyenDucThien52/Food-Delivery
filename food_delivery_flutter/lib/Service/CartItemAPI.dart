@@ -29,7 +29,6 @@ class CartItemService{
   }
   
   Future<void> saveCartItem(CartItem cartItem) async{
-    print(cartItem.quantity);
     final response = await http.post(
         Uri.parse('$apiURL/insert'),
         headers: <String, String>{

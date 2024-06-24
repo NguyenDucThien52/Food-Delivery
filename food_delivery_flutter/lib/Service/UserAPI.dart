@@ -16,7 +16,7 @@ class UserService {
     );
 
     if (response.statusCode == 200) {
-      print("Create account " + response.body + " Successfully");
+      print("Create account Successfully");
     } else {
       throw Exception('Failed to register user');
     }

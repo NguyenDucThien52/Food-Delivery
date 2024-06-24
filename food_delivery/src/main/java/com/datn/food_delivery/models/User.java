@@ -1,26 +1,12 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.*;
-
-//@Entity
 public class User {
-//    @Id
     private String email;
     private String fullName;
     private String password;
     private String phoneNumber;
     private String address;
     private String imageURL;
-//    @OneToMany
-//    private Order order;
-//    @OneToMany
-//    private Payment payment;
-//    @OneToMany
-//    private Review review;
-//    @OneToOne
-//    private FavoriteFood favoriteFood;
-//    @OneToOne
-//    private FavoriteShop favoriteShop;
 
     public User() {
     }

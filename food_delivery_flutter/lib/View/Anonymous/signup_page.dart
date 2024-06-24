@@ -347,7 +347,7 @@ class _SignUpPageState extends State<SignUpPage> {
             address: 'Le Thanh Nghi, Hai Ba Trung, Ha Noi',
             phoneNumber: _phoneController.text),
       );
-      cartService.saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text, cartItem_id: []));
+      cartService.saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text));
 
       print("Registered user: ${userCredential.user}");
     } catch (e) {

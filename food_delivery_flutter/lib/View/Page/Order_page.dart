@@ -1,11 +1,17 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:food_delivery/Model/CartItem.dart';
+import 'package:food_delivery/Model/OrderItem.dart';
+import 'package:food_delivery/Model/Product.dart';
 import 'package:food_delivery/Model/Receiver.dart';
+import 'package:food_delivery/Service/CartItemAPI.dart';
 import 'package:food_delivery/Service/OrderAPI.dart';
+import 'package:food_delivery/Service/OrderItemAPI.dart';
 import 'package:food_delivery/Service/ReceiverAPI.dart';
 
 import '../../Model/Order.dart';
@@ -14,20 +20,25 @@ import '../../Model/User.dart';
 class Order_page extends StatefulWidget {
   final double total;
   final Person user;
+  final List<CartItem> cartItemsList;
+  final List<Product> productList;
 
-  const Order_page({super.key, required this.total, required this.user});
+  const Order_page({super.key, required this.total, required this.user, required this.cartItemsList, required this.productList});
 
   @override
   State<Order_page> createState() => _Order_pageState();
 }
 
 class _Order_pageState extends State<Order_page> {
+
   int _selectedValue = 1;
   TextEditingController _addressController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
   TextEditingController _phoneNumberController = TextEditingController();
 
-  void _showPopup(BuildContext context) {
+  late Receiver receiver;
+
+  void _showPopuNamePhonenumber(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -55,6 +66,8 @@ class _Order_pageState extends State<Order_page> {
           actions: [
             TextButton(
               onPressed: () {
+                print(_phoneNumberController.text);
+                _updateNameNPhoneNumber(_nameController.text, _phoneNumberController.text);
                 Navigator.of(context).pop();
               },
               child: Text('Cập nhật'),
@@ -65,11 +78,73 @@ class _Order_pageState extends State<Order_page> {
     );
   }
 
+  void _showPopuAddress(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            "Thông tin người nhận",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          content: SizedBox(
+            height: 200,
+            width: 350,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Text(
+                    "Địa chỉ giao hàng",
+                    style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                  ),
+                ),
+                TextField(
+                  controller: _addressController,
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                _updateAddress(_addressController.text);
+                Navigator.of(context).pop();
+              },
+              child: Text('Cập nhật'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _updateNameNPhoneNumber(String name, String phoneNumber) {
+    setState(() {
+      receiver.receiver_name = name;
+      receiver.receiver_phone = phoneNumber;
+    });
+  }
+
+  void _updateAddress(String address) {
+    setState(() {
+      _addressController.text = address;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
-    _nameController.text = widget.user.fullName;
-    _phoneNumberController.text = widget.user.phoneNumber;
+    receiver = Receiver(
+        receiver_id: DateTime
+            .now()
+            .millisecondsSinceEpoch,
+        receiver_name: widget.user.fullName,
+        receiver_phone: widget.user.phoneNumber);
+    _nameController.text = receiver.receiver_name;
+    _phoneNumberController.text = receiver.receiver_phone;
+    _addressController.text = widget.user.address;
   }
 
   @override
@@ -91,15 +166,100 @@ class _Order_pageState extends State<Order_page> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
+                padding: EdgeInsets.all(10),
+                child: Text(
+                  "Thông tin người nhận hàng",
+                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                ),
+              ),
+              SizedBox(
+                height: 150,
+                width: 390,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _showPopuAddress(context);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text(
+                            "Địa chỉ giao hàng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
+                          Padding(padding: EdgeInsets.all(15), child: Text(
+                            _addressController.text == "" ? "Vui lòng chọn địa chỉ nhận hàng" : _addressController.text,
+                            style: TextStyle(color: Colors.grey),)),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _showPopuNamePhonenumber(context);
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border(
+                                  right: BorderSide(color: Colors.black, width: 1.0),
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 10),
+                                    child: Text(receiver.receiver_name),
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsets.all(10),
+                                    child: Text(receiver.receiver_phone),
+                                  ),
+                                  // Divider(height: 2, thickness: 3)
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              Text("Dự kiến giao hàng", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              SizedBox(height: 5),
+                              Text("30-60 phút", style: TextStyle(fontSize: 16)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Text("Sản phẩm đã chọn"),
+              Column(
+                children: [
+                  for(int i=0; i<widget.cartItemsList.length; i++)
+                    Padding(padding: EdgeInsets.all(10), child: Text("x${widget.cartItemsList[i].quantity} ${widget.productList[i].name}"),)
+                ],
+              ),
+              Padding(padding: EdgeInsets.all(10),
+                  child: Text("Tổng cộng:", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+              Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),
                 child: Column(
                   children: [
                     TextOrder(name: "Order", price: widget.total),
                     TextOrder(name: "Thuế", price: tax),
                     TextOrder(name: "Phí ship", price: ship),
-                    Divider(height: 20, thickness: 1, indent: 10, endIndent: 10, color: Colors.grey),
+                    Divider(height: 20,
+                        thickness: 1,
+                        indent: 10,
+                        endIndent: 10,
+                        color: Colors.grey),
                     SizedBox(
-                      height: 60,
+                      height: 50,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -108,22 +268,14 @@ class _Order_pageState extends State<Order_page> {
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 35,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Dự khiến giao hàng", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                          Text("30-60 phút", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    ),
                   ],
                 ),
               ),
-              SizedBox(height: 40),
+              SizedBox(
+                height: 20,
+              ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
+                padding: EdgeInsets.all(10),
                 child: Text(
                   "Phương thức thanh toán",
                   style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
@@ -199,50 +351,13 @@ class _Order_pageState extends State<Order_page> {
                   ),
                 ),
               ),
-              SizedBox(height: 40),
-              SizedBox(
-                height: 60,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          print(_nameController);
-                          _showPopup(context);
-                        },
-                        child: Container(
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.red,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Text(
-                  "Địa chỉ giao hàng",
-                  style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-                ),
-              ),
-              TextField(
-                controller: _addressController,
-              ),
-              SizedBox(
-                height: 50,
-              ),
+              SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  int id = DateTime.now().millisecondsSinceEpoch;
-                  ReceiverSerice().insertReceiver(Receiver(
-                      receiver_id: id,
-                      receiver_name: _nameController.text,
-                      receiver_phone: _phoneNumberController.text));
+                  int id = DateTime
+                      .now()
+                      .millisecondsSinceEpoch;
+                  ReceiverSerice().insertReceiver(receiver);
                   DateTime dateTime = DateTime.now();
                   OrderService().insertOrder(Order(
                       email: widget.user.email,
@@ -251,8 +366,11 @@ class _Order_pageState extends State<Order_page> {
                       orderDate: dateTime,
                       totalAmount: Total,
                       paymentMethod:
-                          _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
+                      _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
                       receiver_id: id));
+                  for(int i=0; i<widget.productList.length; i++){
+                    OrderItemService().saveOrderItem(OrderItem(orderItem_id: id, quantity: widget.cartItemsList[i].quantity, product_id: widget.cartItemsList[i].product_id, order_id: id));
+                  }
                 },
                 child: Text("Thanh Toán"),
               ),

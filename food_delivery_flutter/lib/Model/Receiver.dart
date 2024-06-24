@@ -1,7 +1,7 @@
 class Receiver{
-  final int receiver_id;
-  final String receiver_name;
-  final String receiver_phone;
+  int receiver_id;
+  String receiver_name;
+  String receiver_phone;
 
   Receiver({required this.receiver_id, required this.receiver_name, required this.receiver_phone});
 

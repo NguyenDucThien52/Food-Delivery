@@ -27,8 +27,8 @@ public class ProductController {
     }
 
     @GetMapping("/getProductByCart")
-    List<Product> getProductsByCart(@RequestParam List<Long> product_id) throws  ExecutionException, InterruptedException{
-        return firebaseService.getProductsByCart(product_id);
+    List<Product> getProductsByCartItem(@RequestParam List<Long> product_id) throws  ExecutionException, InterruptedException{
+        return firebaseService.getProductsByCartItem(product_id);
     }
 }
 

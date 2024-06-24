@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:food_delivery/Service/CartAPI.dart';
 import 'package:http/http.dart' as http;
 import 'package:food_delivery/Model/Product.dart';
 
@@ -18,7 +17,7 @@ class ProductService {
     }
   }
 
-  Future<List<Product>> getProductsByCart(List<int> product_id) async{
+  Future<List<Product>> getProductsByCartItem(List<int> product_id) async{
     String numberString = product_id.join(',');
     print('$apiUrl/getProductByCart?product_id=$numberString');
     final response = await http.get(Uri.parse('$apiUrl/getProductByCart?product_id=$numberString'));
