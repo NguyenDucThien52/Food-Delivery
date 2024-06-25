@@ -13,7 +13,6 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class OrderService {
     public void saveOrder(Order order) {
-        System.out.println(order.getDeliveryAddress());
         Firestore firestore = FirestoreClient.getFirestore();
         DocumentReference docRef = firestore
                 .collection("orders")

@@ -17,7 +17,7 @@ public class OrderItemService {
         Firestore firestore = FirestoreClient.getFirestore();
         DocumentReference docRef = firestore
                 .collection("orderitems")
-                .document(String.valueOf(orderItem.getOrder_id()));
+                .document(String.valueOf(orderItem.getOrderItem_id()));
         ApiFuture<WriteResult> writeResult = docRef.set(orderItem);
     }
 

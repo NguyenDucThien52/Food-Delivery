@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ffi';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,14 +24,14 @@ class Order_page extends StatefulWidget {
   final List<CartItem> cartItemsList;
   final List<Product> productList;
 
-  const Order_page({super.key, required this.total, required this.user, required this.cartItemsList, required this.productList});
+  const Order_page(
+      {super.key, required this.total, required this.user, required this.cartItemsList, required this.productList});
 
   @override
   State<Order_page> createState() => _Order_pageState();
 }
 
 class _Order_pageState extends State<Order_page> {
-
   int _selectedValue = 1;
   TextEditingController _addressController = TextEditingController();
   TextEditingController _nameController = TextEditingController();
@@ -137,9 +138,7 @@ class _Order_pageState extends State<Order_page> {
   void initState() {
     super.initState();
     receiver = Receiver(
-        receiver_id: DateTime
-            .now()
-            .millisecondsSinceEpoch,
+        receiver_id: DateTime.now().millisecondsSinceEpoch,
         receiver_name: widget.user.fullName,
         receiver_phone: widget.user.phoneNumber);
     _nameController.text = receiver.receiver_name;
@@ -185,11 +184,20 @@ class _Order_pageState extends State<Order_page> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Padding(padding: EdgeInsets.symmetric(horizontal: 10), child: Text(
-                            "Địa chỉ giao hàng", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),)),
-                          Padding(padding: EdgeInsets.all(15), child: Text(
-                            _addressController.text == "" ? "Vui lòng chọn địa chỉ nhận hàng" : _addressController.text,
-                            style: TextStyle(color: Colors.grey),)),
+                          Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              child: Text(
+                                "Địa chỉ giao hàng",
+                                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                              )),
+                          Padding(
+                              padding: EdgeInsets.all(15),
+                              child: Text(
+                                _addressController.text == ""
+                                    ? "Vui lòng chọn địa chỉ nhận hàng"
+                                    : _addressController.text,
+                                style: TextStyle(color: Colors.grey),
+                              )),
                         ],
                       ),
                     ),
@@ -237,14 +245,32 @@ class _Order_pageState extends State<Order_page> {
                   ],
                 ),
               ),
-              Text("Sản phẩm đã chọn"),
-              Column(
-                children: [
-                  for(int i=0; i<widget.cartItemsList.length; i++)
-                    Padding(padding: EdgeInsets.all(10), child: Text("x${widget.cartItemsList[i].quantity} ${widget.productList[i].name}"),)
-                ],
+              Padding(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    "Sản phẩm đã chọn",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  )),
+              SizedBox(
+                width: 350,
+                child: Column(
+                  children: [
+                    for (int i = 0; i < widget.cartItemsList.length; i++)
+                      Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("x${widget.cartItemsList[i].quantity} ${widget.productList[i].name}"),
+                            Text("${widget.productList[i].price*widget.cartItemsList[i].quantity} đ"),
+                          ],
+                        ),
+                      ),
+                  ],
+                ),
               ),
-              Padding(padding: EdgeInsets.all(10),
+              Padding(
+                  padding: EdgeInsets.all(10),
                   child: Text("Tổng cộng:", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 30),
@@ -253,11 +279,7 @@ class _Order_pageState extends State<Order_page> {
                     TextOrder(name: "Order", price: widget.total),
                     TextOrder(name: "Thuế", price: tax),
                     TextOrder(name: "Phí ship", price: ship),
-                    Divider(height: 20,
-                        thickness: 1,
-                        indent: 10,
-                        endIndent: 10,
-                        color: Colors.grey),
+                    Divider(height: 20, thickness: 1, indent: 10, endIndent: 10, color: Colors.grey),
                     SizedBox(
                       height: 50,
                       child: Row(
@@ -354,9 +376,7 @@ class _Order_pageState extends State<Order_page> {
               SizedBox(height: 20),
               ElevatedButton(
                 onPressed: () {
-                  int id = DateTime
-                      .now()
-                      .millisecondsSinceEpoch;
+                  int id = DateTime.now().millisecondsSinceEpoch;
                   ReceiverSerice().insertReceiver(receiver);
                   DateTime dateTime = DateTime.now();
                   OrderService().insertOrder(Order(
@@ -366,11 +386,19 @@ class _Order_pageState extends State<Order_page> {
                       orderDate: dateTime,
                       totalAmount: Total,
                       paymentMethod:
-                      _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
+                          _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
                       receiver_id: id));
-                  for(int i=0; i<widget.productList.length; i++){
-                    OrderItemService().saveOrderItem(OrderItem(orderItem_id: id, quantity: widget.cartItemsList[i].quantity, product_id: widget.cartItemsList[i].product_id, order_id: id));
-                  }
+                  for (int i = 0; i < widget.productList.length; i++) {
+                    int orderItemId = Random().nextInt(10000000);
+                    OrderItemService().saveOrderItem(OrderItem(
+                        orderItem_id: orderItemId,
+                        quantity: widget.cartItemsList[i].quantity,
+                        product_id: widget.cartItemsList[i].product_id,
+                        order_id: id));
+                    CartItemService().deleteCartItem(widget.cartItemsList[i].cartItem_id);
+                  };
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 child: Text("Thanh Toán"),
               ),

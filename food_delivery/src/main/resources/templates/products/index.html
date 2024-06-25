@@ -6,55 +6,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <title>Food Delivery</title>
 </head>
 
 <body>
-<div class="header">
     <div class="container">
-        <h1 class="text-center p-3">PRODUCT</h1>
-        <a href="products/create" class="btn btn-success btn-lg">Add Product</a>
-        <div class="table-responsive">
-            <table class="table table-strip">
-                <thead>
-                <tr>
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Price</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Function</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="product : ${products}">
-                    <td th:text="${product.product_id}"></td>
-                    <td th:text="${product.name}"></td>
-                    <td th:text="${product.description}"></td>
-                    <td th:text="${product.price}"></td>
-                    <td><img th:src="${product.imageURL}" width="200" height="200"></td>
-                    <td>
-                        <a th:href="@{products/edit/{id}(id=${product.product_id})}">
-                            <button>Edit</button>
-                        </a>
-                    </td>
-                    <td>
-                        <a th:href="@{products/destroy/{id}(id=${product.product_id})}">
-                            <button>Delete</button>
-                        </a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+        <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+            <a href="#"></a>
+            <ul class="nav nav-pills">
+                <li>
+                    <a href="#" class="nav-link active">Sản phẩm</a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link">Danh mục</a>
+                </li>
+                <li><a href="#" class="nav-link">Cửa hàng</a></li>
+                <li><a href="#" class="nav-link">Đăng xuất</a></li>
+            </ul>
+        </header>
+    </div>
+    <div>
+        <div class="container">
+            <h1 class="text-center p-3">PRODUCT</h1>
+            <a href="products/create" class="btn btn-success btn-lg">Add Product</a>
+            <div class="table-responsive">
+                <table class="table table-strip">
+                    <thead>
+                        <tr>
+                            <th scope="col">ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Function</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="product : ${products}">
+                            <td th:text="${product.product_id}"></td>
+                            <td th:text="${product.name}"></td>
+                            <td th:text="${product.description}"></td>
+                            <td th:text="${product.price}"></td>
+                            <td><img th:src="${product.imageURL}" width="200" height="200"></td>
+                            <td>
+                                <a th:href="@{products/edit/{id}(id=${product.product_id})}">
+                                    <button>Edit</button>
+                                </a>
+                            </td>
+                            <td>
+                                <a th:href="@{products/destroy/{id}(id=${product.product_id})}">
+                                    <button>Delete</button>
+                                </a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+
     </div>
 
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
-</script>
+        </script>
 </body>
 
 </html>
