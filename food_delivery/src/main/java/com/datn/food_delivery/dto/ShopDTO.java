@@ -1,32 +1,34 @@
-package com.datn.food_delivery.models;
+package com.datn.food_delivery.dto;
 
-public class Shop {
+import org.springframework.web.multipart.MultipartFile;
+
+public class ShopDTO {
     private Long shop_id;
     private String name;
     private String address;
-    private String imageURL;
+    private MultipartFile imageURL;
 
-    public Shop(Long shop_id, String name, String address, String imageURL) {
+    public ShopDTO() {
+    }
+
+    public ShopDTO(Long shop_id, String name, String address, MultipartFile imageURL) {
         this.shop_id = shop_id;
         this.name = name;
         this.address = address;
         this.imageURL = imageURL;
     }
 
-    public Shop(Long shop_id, String name, String address) {
+    public ShopDTO(Long shop_id, String name, String address) {
         this.shop_id = shop_id;
         this.name = name;
         this.address = address;
     }
 
-    public Shop() {
-    }
-
-    public long getShop_id() {
+    public Long getShop_id() {
         return shop_id;
     }
 
-    public void setShop_id(long shop_id) {
+    public void setShop_id(Long shop_id) {
         this.shop_id = shop_id;
     }
 
@@ -46,11 +48,11 @@ public class Shop {
         this.address = address;
     }
 
-    public String getImageURL() {
+    public MultipartFile getImageURL() {
         return imageURL;
     }
 
-    public void setImageURL(String imageURL) {
+    public void setImageURL(MultipartFile imageURL) {
         this.imageURL = imageURL;
     }
 }

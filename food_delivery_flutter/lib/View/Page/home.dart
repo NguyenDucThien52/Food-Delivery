@@ -4,8 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Model/CartItem.dart';
+import 'package:food_delivery/Model/Category.dart';
 import 'package:food_delivery/Service/CartAPI.dart';
 import 'package:food_delivery/Service/CartItemAPI.dart';
+import 'package:food_delivery/Service/CategoryAPI.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
 
 import '../../Model/Cart.dart';
@@ -20,12 +22,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   late Future<List<Product>> products;
   late Future<Cart> cart;
+  late Future<List<Category>> categories;
 
   @override
   void initState() {
     super.initState();
     cart = CartService().fetchCart();
     products = ProductService().fetchProducts();
+    categories = CategoryService().fetchCategory();
   }
 
   final List<Map<String, String>> productss = [
@@ -67,19 +71,21 @@ class _HomeState extends State<Home> {
                                 children: [
                                   SizedBox(
                                     height: 200,
-                                    child: GridView.builder(
-                                      scrollDirection: Axis.horizontal,
-                                      padding: EdgeInsets.all(10.0),
-                                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                      ),
-                                      itemCount: productss.length,
-                                      itemBuilder: (context, index) {
-                                        return ProductItem(
-                                          name: productss[index]["name"]!,
-                                          imageUrl: productss[index]["image"]!,
-                                        );
-                                      },
+                                    child: FutureBuilder(
+                                      future: categories,
+                                      builder: (context, snapshot) {
+                                        return GridView.builder(
+                                          itemCount:snapshot.data!.length,
+                                          itemBuilder: (context, index) {
+                                            return CategoryItem(name: snapshot.data![index].name, imageUrl: snapshot.data![index].imageURL);
+                                          },
+                                          scrollDirection: Axis.horizontal,
+                                          padding: EdgeInsets.all(10.0),
+                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                            crossAxisCount: 2,
+                                          ),
+
+                                        );}
                                     ),
                                   ),
                                   SizedBox(
@@ -227,11 +233,11 @@ class _HomeState extends State<Home> {
   }
 }
 
-class ProductItem extends StatelessWidget {
+class CategoryItem extends StatelessWidget {
   final String name;
   final String imageUrl;
 
-  const ProductItem({required this.name, required this.imageUrl});
+  const CategoryItem({required this.name, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -247,7 +253,7 @@ class ProductItem extends StatelessWidget {
           padding: const EdgeInsets.all(8.0),
           child: Text(
             name,
-            style: TextStyle(fontSize: 16.0),
+            style: TextStyle(fontSize: 12.0),
             textAlign: TextAlign.center,
           ),
         ),

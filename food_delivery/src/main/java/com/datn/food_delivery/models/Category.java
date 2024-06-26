@@ -8,11 +8,18 @@ import java.util.List;
 public class Category {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long category_id;
+    private Long category_id;
     private String name;
+    private String imageURL;
 
 
     public Category() {
+    }
+
+    public Category(long category_id, String name, String imageURL) {
+        this.category_id = category_id;
+        this.name = name;
+        this.imageURL = imageURL;
     }
 
     public Category(String name) {
@@ -33,5 +40,12 @@ public class Category {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getImageURL() {
+        return imageURL;
+    }
+    public void setImageURL(String imageURL) {
+        this.imageURL = imageURL;
     }
 }

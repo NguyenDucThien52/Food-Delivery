@@ -37,7 +37,6 @@ public class FirebaseService {
 
     public Cart getCart(String email) throws ExecutionException, InterruptedException{
         Firestore firestore = FirestoreClient.getFirestore();
-        System.out.println(email);
         ApiFuture<QuerySnapshot> userFutures = firestore.collection("users").whereEqualTo("email", email).get();
         List<QueryDocumentSnapshot> document = userFutures.get().getDocuments();
         ApiFuture<QuerySnapshot> future = firestore.collection("carts").whereEqualTo("email",email).limit(1).get();
@@ -108,7 +107,7 @@ public class FirebaseService {
         return products;
     }
 
-    public void deleteProduct(Long product_id) throws  InterruptedException, ExecutionException{
+    public void deleteProduct(Long product_id){
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> future = firestore.collection("products").document(product_id.toString()).delete();
     }

@@ -5,9 +5,10 @@ class Product{
   final String name;
   final String description;
   final double price;
+  final int category_id;
   final String imageURL;
 
-  Product({required this.product_id, this.name='', this.description='', this.price=0, this.imageURL=''});
+  Product({required this.product_id, this.name='', this.description='', this.price=0, required this.category_id, this.imageURL=''});
 
   factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
@@ -15,6 +16,7 @@ class Product{
       name: json['name'],
       description: json['description'],
       price: json['price'],
+      category_id: json['category_id'],
       imageURL: json['imageURL'],
     );
   }
@@ -25,6 +27,7 @@ class Product{
       'name': name,
       'description': description,
       'price': price,
+      'category_id': category_id,
       'imageURL': imageURL,
     };
   }
@@ -35,6 +38,7 @@ class Product{
       name: json['name'],
       description: json['description'],
       price: json['price'],
+      category_id: json['category_id'],
       imageURL: json['imageURL'],
     );
   }

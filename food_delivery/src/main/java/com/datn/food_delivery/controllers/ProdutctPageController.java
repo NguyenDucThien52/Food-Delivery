@@ -1,8 +1,9 @@
 package com.datn.food_delivery.controllers;
 
-import com.datn.food_delivery.mapper.ProductMapper;
+import com.datn.food_delivery.models.Category;
 import com.datn.food_delivery.models.Product;
 import com.datn.food_delivery.dto.ProductDTO;
+import com.datn.food_delivery.service.CategoryService;
 import com.datn.food_delivery.service.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,10 +16,12 @@ import java.util.Random;
 import java.util.concurrent.ExecutionException;
 
 @Controller
-@RequestMapping("/products")
-public class HomeController {
+@RequestMapping("/fooddelivery/products")
+public class ProdutctPageController {
     @Autowired
     private FirebaseService service;
+    @Autowired
+    private CategoryService categoryService;
 
 
     @GetMapping("")
@@ -29,7 +32,9 @@ public class HomeController {
     }
 
     @GetMapping("/create")
-    public String addProduct(){
+    public String addProduct(Model model) throws ExecutionException, InterruptedException {
+        List<Category> categories = categoryService.getAllCategory();
+        model.addAttribute("categories", categories);
         return "/products/create";
     }
 
@@ -37,32 +42,39 @@ public class HomeController {
     public String saveProduct(ProductDTO productDTO) throws ExecutionException, InterruptedException, IOException {
         final Long id = new Random().nextLong(100000);
         productDTO.setProductId(id);
-        String imageURL = service.uploadFile(productDTO.getImageURL());
-        Product product = new Product(productDTO.getProductId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), imageURL);
+        System.out.println(productDTO.getCategoryId());
+        String imageURL = null;
+        if(!productDTO.getImageURL().isEmpty()) {
+            imageURL = service.uploadFile(productDTO.getImageURL());
+        }
+        Product product = new Product(productDTO.getProductId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), productDTO.getCategoryId(), imageURL);
         service.saveProduct(product);
-        return "redirect:/products";
+        return "redirect:/fooddelivery/products";
     }
 
     @GetMapping("/edit/{id}")
     public String editProduct(@PathVariable("id") long id, Model model) throws ExecutionException, InterruptedException {
         Product product = service.getProductByid(id);
-        ProductDTO productDTO = new ProductDTO(product.getProduct_id(), product.getName(), product.getDescription(), product.getPrice());
+        ProductDTO productDTO = new ProductDTO(product.getProduct_id(), product.getName(), product.getDescription(), product.getPrice(), product.getCategory_id());
         model.addAttribute("productDTO", productDTO);
         return "products/edit";
     }
 
     @PostMapping("/edit/update")
     public String updateProduct(ProductDTO productDTO) throws ExecutionException, InterruptedException, IOException {
-        System.out.println(productDTO.getProductId() + "\n" + productDTO.getDescription() + "\n" + productDTO.getPrice());
-        String imageURL = service.uploadFile(productDTO.getImageURL());
-        Product product = new Product(productDTO.getProductId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), imageURL);
+        Product product_old = service.getProductByid(productDTO.getProductId());
+        String imageURL = product_old.getImageURL();
+        if(imageURL==null){
+            imageURL = service.uploadFile(productDTO.getImageURL());
+        }
+        Product product = new Product(productDTO.getProductId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), productDTO.getCategoryId(),  imageURL);
         service.saveProduct(product);
-        return "redirect:/products";
+        return "redirect:/fooddelivery/products";
     }
 
     @GetMapping("/destroy/{id}")
     public String deleteProduct(@PathVariable("id") Long id) throws ExecutionException, InterruptedException {
         service.deleteProduct(id);
-        return "redirect:/products";
+        return "redirect:/fooddelivery/products";
     }
 }

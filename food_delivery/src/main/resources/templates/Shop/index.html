@@ -13,15 +13,14 @@
 <body>
     <div class="container">
         <header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
-            <a href="#"></a>
             <ul class="nav nav-pills">
                 <li>
-                    <a href="/fooddelivery/products" class="nav-link active">Sản phẩm</a>
+                    <a href="/fooddelivery/products" class="nav-link">Sản phẩm</a>
                 </li>
                 <li>
                     <a href="/fooddelivery/category" class="nav-link">Danh mục</a>
                 </li>
-                <li><a href="/fooddelivery/shop" class="nav-link">Cửa hàng</a></li>
+                <li><a href="/fooddelivery/shop" class="nav-link active">Cửa hàng</a></li>
                 <li><a href="#" class="nav-link">Đăng xuất</a></li>
             </ul>
         </header>
@@ -29,33 +28,31 @@
     <div>
         <div class="container">
             <h1 class="text-center p-3">PRODUCT</h1>
-            <a href="products/create" class="btn btn-success btn-lg">Add Product</a>
+            <a href="shop/create" class="btn btn-success btn-lg">Add Product</a>
             <div class="table-responsive">
                 <table class="table table-strip">
                     <thead>
                         <tr>
                             <th scope="col">ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Description</th>
-                            <th scope="col">Price</th>
+                            <th scope="col">Address</th>
                             <th scope="col">Image</th>
                             <th scope="col">Function</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="product : ${products}">
-                            <td th:text="${product.product_id}"></td>
-                            <td th:text="${product.name}"></td>
-                            <td th:text="${product.description}"></td>
-                            <td th:text="${product.price}"></td>
-                            <td><img th:src="${product.imageURL}" width="200" height="200"></td>
+                        <tr th:each="shop : ${shops}">
+                            <td th:text="${shop.shop_id}"></td>
+                            <td th:text="${shop.name}"></td>
+                            <td th:text="${shop.address}"></td>
+                            <td><img th:src="${shop.imageURL}" width="200" height="200"></td>
                             <td>
-                                <a th:href="@{products/edit/{id}(id=${product.product_id})}">
+                                <a th:href="@{shop/edit/{id}(id=${shop.shop_id})}">
                                     <button>Edit</button>
                                 </a>
                             </td>
                             <td>
-                                <a th:href="@{products/destroy/{id}(id=${product.product_id})}">
+                                <a th:href="@{shop/destroy/{id}(id=${shop.shop_id})}">
                                     <button>Delete</button>
                                 </a>
                             </td>

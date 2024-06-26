@@ -7,13 +7,15 @@ public class ProductDTO {
     private String name;
     private String description;
     private double price;
+    private Long categoryId;
     private MultipartFile imageURL;
 
-    public ProductDTO(Long productId, String name, String description, double price) {
+    public ProductDTO(Long productId, String name, String description, double price, Long categoryId) {
         this.productId = productId;
         this.name = name;
         this.description = description;
         this.price = price;
+        this.categoryId = categoryId;
     }
 
     // Getter và Setter cho các thuộc tính
@@ -47,6 +49,14 @@ public class ProductDTO {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
     public MultipartFile getImageURL() {
