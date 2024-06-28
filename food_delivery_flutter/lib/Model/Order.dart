@@ -22,7 +22,7 @@ class Order {
     return Order(
       order_id: json['order_id'],
       totalAmount: json['totalAmount'],
-      orderDate: json['orderDate'],
+      orderDate: DateTime.parse(json['orderDate']),
       deliveryAddress: json['deliveryAddress'],
       paymentMethod: json['paymentMethod'],
       email: json['email'],

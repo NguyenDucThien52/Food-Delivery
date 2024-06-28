@@ -6,10 +6,13 @@ import 'package:food_delivery/Model/User.dart';
 import 'package:food_delivery/View/Page/OrderHistory.dart';
 import 'package:food_delivery/View/Page/Profile.dart';
 
+import '../../Model/Order.dart';
+
 class Other extends StatefulWidget {
   final Person user;
+  final List<Order> orders;
 
-  const Other({required this.user});
+  const Other({required this.user, required this.orders});
 
   @override
   State<Other> createState() => _OtherState();
@@ -40,7 +43,7 @@ class _OtherState extends State<Other> {
             ),
             GestureDetector(
               onTap: (){
-                // Navigator.push(context, MaterialPageRoute(builder: (context) => OrderHistory(orders: orders)))
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderHistory(orders: widget.orders)));
               },
               child: Card(
                 color: Theme.of(context).colorScheme.background,

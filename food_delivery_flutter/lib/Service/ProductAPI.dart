@@ -41,8 +41,17 @@ class ProductService {
     }
   }
 
+  Future<Product> getProductById(int product_id) async{
+    print('$apiUrl/getProductByid?product_id=$product_id');
+    final response = await http.get(Uri.parse('$apiUrl/getProductByid?product_id=$product_id'));
+    if(response.statusCode == 200){
+      return Product.fromJson(json.decode(utf8.decode(response.bodyBytes)));
+    }else{
+      throw Exception("Failed to load product");
+    }
+  }
+
   Future<int> insertProducts(Product product) async {
-    print('$apiUrl/insert');
     final response = await http.post(
       Uri.parse('$apiUrl/insert'),
       headers: <String, String>{

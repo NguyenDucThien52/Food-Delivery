@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_delivery/Model/User.dart';
 import 'package:food_delivery/Service/CartAPI.dart';
+import 'package:food_delivery/Service/OrderAPI.dart';
 import 'package:food_delivery/Service/UserAPI.dart';
 import 'package:food_delivery/View/Page/Cart_page.dart';
 import 'package:food_delivery/View/Page/Other.dart';
@@ -9,6 +10,7 @@ import 'package:food_delivery/View/Page/Home.dart';
 import 'package:food_delivery/View/Page/shop.dart';
 
 import '../../Model/Cart.dart';
+import '../../Model/Order.dart';
 
 class Home_page extends StatefulWidget {
   @override
@@ -20,6 +22,8 @@ class _Home_pageState extends State<Home_page> {
   late Future<Cart> cart;
   late Person user;
   late Future<Person> person;
+  // late Future<List<Order>> orders;
+  late List<Order> orders;
 
   @override
   void initState() {
@@ -30,6 +34,10 @@ class _Home_pageState extends State<Home_page> {
     person.then((value) {
       user =
           Person(email: value.email, phoneNumber: value.phoneNumber, address: value.address, fullName: value.fullName, imageURL: value.imageURL);
+    });
+    OrderService().fetchOrder().then((value) {
+      orders = value;
+      print(orders.length);
     });
   }
 
@@ -42,7 +50,7 @@ class _Home_pageState extends State<Home_page> {
       case 1:
         page = Shop_page();
       case 2:
-        page = Other(user: user,);
+        page = Other(user: user,orders: orders);
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }

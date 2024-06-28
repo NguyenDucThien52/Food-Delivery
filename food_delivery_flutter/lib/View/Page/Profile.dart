@@ -26,6 +26,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
   late String imageURL;
+  bool isUpdated = false;
 
   @override
   void initState() {
@@ -45,7 +46,8 @@ class _ProfileState extends State<Profile> {
         title: Text("Thông tin cá nhân"),
         leading: IconButton(
           onPressed: (){
-            if(imageURL!=widget.user.imageURL){
+            print(isUpdated);
+            if(isUpdated){
               FirebaseStorage.instance.refFromURL(imageURL).delete();
             }
             Navigator.pop(context);
@@ -170,7 +172,7 @@ class _ProfileState extends State<Profile> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  print(imageURL);
+                  isUpdated = true;
                   UserService().registerUser(Person(
                       fullName: _nameController.text,
                       email: _emailController.text,
