@@ -29,6 +29,17 @@ class ProductService {
       throw Exception("Failed to load products");
     }
   }
+  
+  Future<List<Product>> getProductByCategory(int category_id) async{
+    final response = await http.get(Uri.parse('$apiUrl/getProductbyCategory?category_id=$category_id'));
+    if(response.statusCode == 200){
+      List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
+      List<Product> products = body.map((dynamic item) => Product.fromJson(item)).toList();
+      return products;
+    }else{
+      throw Exception("Failed to load products by category");
+    }
+  }
 
   Future<int> insertProducts(Product product) async {
     print('$apiUrl/insert');

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:food_delivery/View/Anonymous/signup_page.dart';
 import 'package:food_delivery/View/Page/admin.dart';
-import 'package:food_delivery/View/Page/home.dart';
-import 'package:food_delivery/View/Page/home_page.dart';
+import 'package:food_delivery/View/Page/Home.dart';
+import 'package:food_delivery/View/Page/Home_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -197,7 +197,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
         setState(() {
           errorMessage = '';
         });
-        Navigator.push(context, MaterialPageRoute(builder: (context) => HomePage()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Home_page()));
     } catch (e) {
       setState(() {
         errorMessage = e.toString();

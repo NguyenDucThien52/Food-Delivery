@@ -9,12 +9,13 @@ import 'package:food_delivery/Service/CartAPI.dart';
 import 'package:food_delivery/Service/CartItemAPI.dart';
 import 'package:food_delivery/Service/CategoryAPI.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
+import 'package:food_delivery/View/Page/Category_page.dart';
+import 'package:food_delivery/View/Page/ProductDetail_page.dart';
 
 import '../../Model/Cart.dart';
 import '../../Model/Product.dart';
 
 class Home extends StatefulWidget {
-
   @override
   State<Home> createState() => _HomeState();
 }
@@ -31,18 +32,6 @@ class _HomeState extends State<Home> {
     products = ProductService().fetchProducts();
     categories = CategoryService().fetchCategory();
   }
-
-  final List<Map<String, String>> productss = [
-    {"name": "Product 1", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 2", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 3", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 4", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 5", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 6", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 7", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 8", "image": "https://via.placeholder.com/150"},
-    {"name": "Product 9", "image": "https://via.placeholder.com/150"},
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -72,21 +61,39 @@ class _HomeState extends State<Home> {
                                   SizedBox(
                                     height: 200,
                                     child: FutureBuilder(
-                                      future: categories,
-                                      builder: (context, snapshot) {
-                                        return GridView.builder(
-                                          itemCount:snapshot.data!.length,
-                                          itemBuilder: (context, index) {
-                                            return CategoryItem(name: snapshot.data![index].name, imageUrl: snapshot.data![index].imageURL);
-                                          },
-                                          scrollDirection: Axis.horizontal,
-                                          padding: EdgeInsets.all(10.0),
-                                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                          ),
-
-                                        );}
-                                    ),
+                                        future: categories,
+                                        builder: (context, snapshot) {
+                                          if (snapshot.connectionState == ConnectionState.waiting) {
+                                            return Center(child: CircularProgressIndicator());
+                                          } else if (snapshot.hasError) {
+                                            return Center(child: Text('Error: ${snapshot.error}'));
+                                          } else {
+                                            return GridView.builder(
+                                              itemCount: snapshot.data!.length,
+                                              itemBuilder: (context, index) {
+                                                return GestureDetector(
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => Category_page(
+                                                                  category: snapshot.data![index],
+                                                                  cart: cartSnapshot.data,
+                                                                )));
+                                                  },
+                                                  child: CategoryItem(
+                                                      name: snapshot.data![index].name,
+                                                      imageUrl: snapshot.data![index].imageURL),
+                                                );
+                                              },
+                                              scrollDirection: Axis.horizontal,
+                                              padding: EdgeInsets.all(10.0),
+                                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                                crossAxisCount: 2,
+                                              ),
+                                            );
+                                          }
+                                        }),
                                   ),
                                   SizedBox(
                                     height: 320, // Đặt chiều cao cho ListView
@@ -149,7 +156,7 @@ class _HomeState extends State<Home> {
                                                                     .fetchCartItem(
                                                                         product.product_id, cartSnapshot.data!.cart_id)
                                                                     .then((value) {
-                                                                      print(value.quantity);
+                                                                  print(value.quantity);
                                                                   if (value.quantity == 0) {
                                                                     CartItemService().saveCartItem(CartItem(
                                                                         cart_id: cartSnapshot.data!.cart_id,
@@ -190,28 +197,62 @@ class _HomeState extends State<Home> {
                                   Column(
                                     children: [
                                       for (var i = 0; i < snapshot.data!.length; i++)
-                                        Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 10),
-                                          child: Card(
-                                            color: Theme.of(context).colorScheme.background,
-                                            child: ListTile(
-                                              leading: Image.network(
-                                                snapshot.data![i].imageURL,
-                                                height: 60,
-                                                width: 60,
-                                                fit: BoxFit.cover,
+                                        GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => ProductDetail_page(
+                                                          product: snapshot.data![i],
+                                                          cart: cartSnapshot.data,
+                                                        )));
+                                          },
+                                          child: Padding(
+                                            padding: EdgeInsets.symmetric(horizontal: 10),
+                                            child: Card(
+                                              color: Theme.of(context).colorScheme.background,
+                                              child: ListTile(
+                                                leading: Image.network(
+                                                  snapshot.data![i].imageURL,
+                                                  height: 60,
+                                                  width: 60,
+                                                  fit: BoxFit.cover,
+                                                ),
+                                                title: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(snapshot.data![i].name),
+                                                    Text(
+                                                      snapshot.data![i].price.toString(),
+                                                      style: TextStyle(fontSize: 10),
+                                                    ),
+                                                  ],
+                                                ),
+                                                trailing: IconButton(
+                                                  onPressed: () {
+                                                    int cartItemid = DateTime.now().millisecondsSinceEpoch;
+                                                    CartItemService()
+                                                        .fetchCartItem(
+                                                            snapshot.data![i].product_id, cartSnapshot.data!.cart_id)
+                                                        .then((value) {
+                                                      if (value.quantity == 0) {
+                                                        CartItemService().saveCartItem(CartItem(
+                                                            cart_id: cartSnapshot.data!.cart_id,
+                                                            quantity: 1,
+                                                            product_id: snapshot.data![i].product_id,
+                                                            cartItem_id: cartItemid));
+                                                      } else {
+                                                        CartItemService().saveCartItem(CartItem(
+                                                            cart_id: cartSnapshot.data!.cart_id,
+                                                            quantity: (value.quantity + 1),
+                                                            product_id: snapshot.data![i].product_id,
+                                                            cartItem_id: value.cartItem_id));
+                                                      }
+                                                    });
+                                                  },
+                                                  icon: Icon(Icons.add_circle_outline),
+                                                ),
                                               ),
-                                              title: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(snapshot.data![i].name),
-                                                  Text(
-                                                    snapshot.data![i].description,
-                                                    style: TextStyle(fontSize: 10),
-                                                  ),
-                                                ],
-                                              ),
-                                              trailing: Text(snapshot.data![i].price.toString()),
                                             ),
                                           ),
                                         )

@@ -1,13 +1,10 @@
 package com.datn.food_delivery.controllers;
 
 import com.datn.food_delivery.models.Cart;
-import com.datn.food_delivery.service.FirebaseService;
-//import jakarta.servlet.http.HttpServletRequest;
+import com.datn.food_delivery.service.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 @CrossOrigin(allowedHeaders ="*",methods = {RequestMethod.POST , RequestMethod.GET})
@@ -16,16 +13,16 @@ import java.util.concurrent.ExecutionException;
 public class CartController {
 
     @Autowired
-    private FirebaseService firebaseService;
+    private CartService cartService;
 
     @GetMapping("")
     Cart getCart(@RequestParam String email) throws ExecutionException, InterruptedException {
-        return firebaseService.getCart(email);
+        return cartService.getCart(email);
     }
 
 
     @PostMapping("/insert")
     void insertCart(@RequestBody Cart cart) throws ExecutionException, InterruptedException{
-        firebaseService.saveCart(cart);
+        cartService.saveCart(cart);
     }
 }

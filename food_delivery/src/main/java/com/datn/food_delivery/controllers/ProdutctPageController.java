@@ -4,7 +4,7 @@ import com.datn.food_delivery.models.Category;
 import com.datn.food_delivery.models.Product;
 import com.datn.food_delivery.dto.ProductDTO;
 import com.datn.food_delivery.service.CategoryService;
-import com.datn.food_delivery.service.FirebaseService;
+import com.datn.food_delivery.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,7 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/fooddelivery/products")
 public class ProdutctPageController {
     @Autowired
-    private FirebaseService service;
+    private ProductService service;
     @Autowired
     private CategoryService categoryService;
 
@@ -42,7 +42,6 @@ public class ProdutctPageController {
     public String saveProduct(ProductDTO productDTO) throws ExecutionException, InterruptedException, IOException {
         final Long id = new Random().nextLong(100000);
         productDTO.setProductId(id);
-        System.out.println(productDTO.getCategoryId());
         String imageURL = null;
         if(!productDTO.getImageURL().isEmpty()) {
             imageURL = service.uploadFile(productDTO.getImageURL());

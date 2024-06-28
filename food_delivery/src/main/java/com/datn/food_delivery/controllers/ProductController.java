@@ -1,7 +1,7 @@
 package com.datn.food_delivery.controllers;
 
 import com.datn.food_delivery.models.Product;
-import com.datn.food_delivery.service.FirebaseService;
+import com.datn.food_delivery.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +14,7 @@ import java.util.concurrent.ExecutionException;
 public class ProductController {
 
     @Autowired
-    private FirebaseService firebaseService;
+    private ProductService firebaseService;
 
     @GetMapping("")
     List<Product> getAllFoods() throws ExecutionException, InterruptedException {
@@ -29,6 +29,11 @@ public class ProductController {
     @GetMapping("/getProductByCart")
     List<Product> getProductsByCartItem(@RequestParam List<Long> product_id) throws  ExecutionException, InterruptedException{
         return firebaseService.getProductsByCartItem(product_id);
+    }
+
+    @GetMapping("/getProductbyCategory")
+    List<Product> getProductsByCategory(@RequestParam Long category_id) throws  ExecutionException, InterruptedException{
+        return firebaseService.getProductsByCategory(category_id);
     }
 }
 
