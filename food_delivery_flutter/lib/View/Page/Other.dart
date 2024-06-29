@@ -10,9 +10,8 @@ import '../../Model/Order.dart';
 
 class Other extends StatefulWidget {
   final Person user;
-  final List<Order> orders;
 
-  const Other({required this.user, required this.orders});
+  const Other({required this.user});
 
   @override
   State<Other> createState() => _OtherState();
@@ -43,7 +42,7 @@ class _OtherState extends State<Other> {
             ),
             GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderHistory(orders: widget.orders)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => OrderHistory()));
               },
               child: Card(
                 color: Theme.of(context).colorScheme.background,

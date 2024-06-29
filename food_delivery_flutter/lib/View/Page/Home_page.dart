@@ -50,7 +50,7 @@ class _Home_pageState extends State<Home_page> {
       case 1:
         page = Shop_page();
       case 2:
-        page = Other(user: user,orders: orders);
+        page = Other(user: user);
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }

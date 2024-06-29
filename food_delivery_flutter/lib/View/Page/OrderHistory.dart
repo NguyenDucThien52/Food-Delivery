@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Model/Product.dart';
+import 'package:food_delivery/Service/OrderAPI.dart';
 import 'package:food_delivery/Service/OrderItemAPI.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
 
@@ -12,71 +13,81 @@ import '../../Model/Order.dart';
 import '../../Model/OrderItem.dart';
 
 class OrderHistory extends StatefulWidget {
-  final List<Order> orders;
-
-  const OrderHistory({required this.orders});
-
   @override
   State<OrderHistory> createState() => _OrderHistoryState();
 }
 
 class _OrderHistoryState extends State<OrderHistory> {
-  // late Future<Product> product;
+  late Future<List<Order>> orders;
   late List<OrderItem> orderitems;
-  List<int> totals = [];
-  List<double> prices = [];
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    for(int i=0; i<widget.orders.length; i++){
-      int total = 0;
-      double price = 0;
-      OrderItemService().fetchOrderItems(widget.orders[i].order_id).then((value) {
-        for(int j=0; j<value.length; j++){
-          total += value[j].quantity;
-          ProductService().getProductById(value[j].product_id).then((productData) {
-            price += value[j].quantity + productData.price;
-            print("quantity: ${value[j].quantity} and price: ${productData.price}");
-          });
-        }
-        prices.add(price);
-        totals.add(total);
-      });
-    }
+    orders = OrderService().fetchOrder();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(widget.orders.length);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Text("Lịch sử"),
       ),
-      body: Column(
-        children: [
-          for (int i = 0; i < widget.orders.length; i++)
-            GestureDetector(
-              onTap: () {},
-              child: SizedBox(
-                width: 390,
-                child: Card(
-                  child: Padding(
-                    padding: EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("order-id: ${widget.orders[i].order_id}"),
-                        Text("số lượng sản phẩm: ${totals[i]}"),
-                        Text("Tổng giá hóa đơn: ${prices[i]}"),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            )
-        ],
+      body: FutureBuilder<List<Order>>(
+        future: orders,
+        builder: (context, orderSnapshot) {
+          if (orderSnapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else if (orderSnapshot.hasError) {
+            return Center(child: Text('Error: ${orderSnapshot.error}'));
+          } else if (!orderSnapshot.hasData || orderSnapshot.data!.isEmpty) {
+            return Center(child: Text('No orders found.'));
+          } else {
+            return ListView.builder(
+              itemCount: orderSnapshot.data!.length,
+              itemBuilder: (context, index) {
+                return FutureBuilder<List<OrderItem>>(
+                  future: OrderItemService().fetchOrderItems(orderSnapshot.data![index].order_id),
+                  builder: (context, snapshot) {
+                    print(snapshot.data!.length);
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(child: Text('No order items found.'));
+                    } else {
+                      List<int> totalProducts = snapshot.data!.map((item) => item.quantity).toList();
+                      int totalQuantity = totalProducts.fold(0, (sum, item) => sum + item);
+                      return GestureDetector(
+                        onTap: () {},
+                        child: SizedBox(
+                          width: 390,
+                          child: Card(
+                            child: Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("Order ID: ${orderSnapshot.data![index].order_id}"),
+                                  Text("Số lượng sản phẩm: $totalQuantity"),
+                                  Text("Tổng giá hóa đơn: ${orderSnapshot.data![index].totalAmount}"),
+                                  Text("Phương thức thanh toán: ${orderSnapshot.data![index].paymentMethod}"),
+                                  Text("Date: ${orderSnapshot.data![index].orderDate}"),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+                  },
+                );
+              },
+            );
+          }
+        },
       ),
     );
   }
