@@ -379,12 +379,17 @@ class _Order_pageState extends State<Order_page> {
                   int id = DateTime.now().millisecondsSinceEpoch;
                   ReceiverSerice().insertReceiver(receiver);
                   DateTime dateTime = DateTime.now();
+                  double quantity = 0;
+                  for(int i=0; i<widget.cartItemsList.length; i++){
+                    quantity += widget.cartItemsList[i].quantity;
+                  }
                   OrderService().insertOrder(Order(
                       email: widget.user.email,
                       deliveryAddress: _addressController.text,
                       order_id: id,
                       orderDate: dateTime,
                       totalAmount: Total,
+                      quantity: quantity,
                       paymentMethod:
                           _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
                       receiver_id: id));

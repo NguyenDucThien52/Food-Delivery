@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 class Order {
   final int order_id;
   final double totalAmount;
+  final double quantity;
   final DateTime orderDate;
   final String deliveryAddress;
   final String paymentMethod;
@@ -12,6 +13,7 @@ class Order {
   const Order(
       {required this.order_id,
       required this.totalAmount,
+      required this.quantity,
       required this.orderDate,
       required this.deliveryAddress,
       required this.paymentMethod,
@@ -22,6 +24,7 @@ class Order {
     return Order(
       order_id: json['order_id'],
       totalAmount: json['totalAmount'],
+      quantity: json['quantity'],
       orderDate: DateTime.parse(json['orderDate']),
       deliveryAddress: json['deliveryAddress'],
       paymentMethod: json['paymentMethod'],
@@ -34,6 +37,7 @@ class Order {
     return {
       'order_id': order_id,
       'totalAmount': totalAmount,
+      'quantity': quantity,
       'orderDate': orderDate.toIso8601String(),
       'deliveryAddress': deliveryAddress,
       'paymentMethod': paymentMethod,
@@ -46,6 +50,7 @@ class Order {
     return Order(
       order_id: json['order_id'],
       totalAmount: json['totalAmount'],
+      quantity: json['quantity'],
       orderDate: json['orderDate'],
       deliveryAddress: json['deliveryAddress'],
       paymentMethod: json['paymentMethod'],

@@ -9,6 +9,7 @@ import java.util.List;
 public class Order {
     private Long order_id;
     private double totalAmount;
+    private double quantity;
     private Date orderDate;
     private String deliveryAddress;
     private String paymentMethod;
@@ -18,9 +19,10 @@ public class Order {
     public Order() {
     }
 
-    public Order(Long order_id, double totalAmount, Date orderDate, String deliveryAddress, String paymentMethod, String email, Long receiver_id) {
+    public Order(Long order_id, double totalAmount, int quantity, Date orderDate, String deliveryAddress, String paymentMethod, String email, Long receiver_id) {
         this.order_id = order_id;
         this.totalAmount = totalAmount;
+        this.quantity = quantity;
         this.orderDate = orderDate;
         this.deliveryAddress = deliveryAddress;
         this.paymentMethod = paymentMethod;
@@ -67,6 +69,14 @@ public class Order {
 
     public void setTotalAmount(double totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public double getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public Date getOrderDate() {

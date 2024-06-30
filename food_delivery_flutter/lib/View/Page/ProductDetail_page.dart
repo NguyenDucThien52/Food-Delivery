@@ -4,7 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Model/CartItem.dart';
+import 'package:food_delivery/Model/Review.dart';
 import 'package:food_delivery/Service/CartItemAPI.dart';
+import 'package:food_delivery/Service/ReviewAPI.dart';
 
 import '../../Model/Cart.dart';
 import '../../Model/Product.dart';
@@ -20,8 +22,16 @@ class ProductDetail_page extends StatefulWidget {
 }
 
 class _ProductDetail_pageState extends State<ProductDetail_page> {
+  late Future<List<Review>> review;
+
   @override
-  Widget build(BuildContext) {
+  void initState() {
+    super.initState();
+    review = ReviewService().fetchReviews(widget.product.product_id);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Chi tiết sản phẩm"),
@@ -36,7 +46,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
           Row(
             children: [
               Expanded(
-                flex: 5,
+                flex: 4,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -62,9 +72,35 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                 ),
               ),
               Expanded(
-                child: IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.favorite_border),
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () {},
+                      icon: Icon(Icons.favorite_border),
+                    ),
+                    Row(
+                      children: [
+                        FutureBuilder<List<Review>>(
+                            future: review,
+                            builder: (context, snapshot) {
+                              int rate = 0;
+                              if (snapshot.connectionState == ConnectionState.waiting) {
+                                return Center(child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(child: Text('Error: ${snapshot.error}'));
+                              } else if (!snapshot.hasData) {
+                                return Center(child: Text('No orders found.'));
+                              } else {
+                                for (int i = 0; i < snapshot.data!.length; i++) {
+                                  rate += snapshot.data![i].rating;
+                                }
+                                return Text('(${snapshot.data!.length}) ${rate / snapshot.data!.length}');
+                              }
+                            }),
+                        IconButton(onPressed: () {}, icon: Icon(Icons.star)),
+                      ],
+                    )
+                  ],
                 ),
               ),
             ],

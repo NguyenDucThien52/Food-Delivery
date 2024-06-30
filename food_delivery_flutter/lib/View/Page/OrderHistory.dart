@@ -4,10 +4,9 @@ import 'dart:ffi';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:food_delivery/Model/Product.dart';
 import 'package:food_delivery/Service/OrderAPI.dart';
 import 'package:food_delivery/Service/OrderItemAPI.dart';
-import 'package:food_delivery/Service/ProductAPI.dart';
+import 'package:food_delivery/View/Page/OrderItem_page.dart';
 
 import '../../Model/Order.dart';
 import '../../Model/OrderItem.dart';
@@ -19,7 +18,7 @@ class OrderHistory extends StatefulWidget {
 
 class _OrderHistoryState extends State<OrderHistory> {
   late Future<List<Order>> orders;
-  late List<OrderItem> orderitems;
+  late List<Future<List<OrderItem>>> orderitems;
 
   @override
   void initState() {
@@ -47,42 +46,30 @@ class _OrderHistoryState extends State<OrderHistory> {
             return ListView.builder(
               itemCount: orderSnapshot.data!.length,
               itemBuilder: (context, index) {
-                return FutureBuilder<List<OrderItem>>(
-                  future: OrderItemService().fetchOrderItems(orderSnapshot.data![index].order_id),
-                  builder: (context, snapshot) {
-                    print(snapshot.data!.length);
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return Center(child: Text('No order items found.'));
-                    } else {
-                      List<int> totalProducts = snapshot.data!.map((item) => item.quantity).toList();
-                      int totalQuantity = totalProducts.fold(0, (sum, item) => sum + item);
-                      return GestureDetector(
-                        onTap: () {},
-                        child: SizedBox(
-                          width: 390,
-                          child: Card(
-                            child: Padding(
-                              padding: EdgeInsets.all(20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("Order ID: ${orderSnapshot.data![index].order_id}"),
-                                  Text("Số lượng sản phẩm: $totalQuantity"),
-                                  Text("Tổng giá hóa đơn: ${orderSnapshot.data![index].totalAmount}"),
-                                  Text("Phương thức thanh toán: ${orderSnapshot.data![index].paymentMethod}"),
-                                  Text("Date: ${orderSnapshot.data![index].orderDate}"),
-                                ],
-                              ),
-                            ),
+                return Padding(
+                  padding: EdgeInsets.all(10),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => OrderItem_page(order: orderSnapshot.data![index],)));
+                    },
+                    child: SizedBox(
+                      width: 390,
+                      child: Card(
+                        child: Padding(
+                          padding: EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("Tổng giá hóa đơn: ${orderSnapshot.data![index].totalAmount.toStringAsFixed(0)} đ", style: TextStyle(fontSize: 18),),
+                              Text("Số lượng sản phẩm: ${orderSnapshot.data![index].quantity.toStringAsFixed(0)}"),
+                              Text("Date: ${orderSnapshot.data![index].orderDate.hour}:${orderSnapshot.data![index].orderDate.minute} - ${orderSnapshot.data![index].orderDate.day}/${orderSnapshot.data![index].orderDate.month}/${orderSnapshot.data![index].orderDate.year}"),
+                              Text("Phương thức thanh toán: ${orderSnapshot.data![index].paymentMethod}", style: TextStyle(fontSize: 12),),
+                            ],
                           ),
                         ),
-                      );
-                    }
-                  },
+                      ),
+                    ),
+                  ),
                 );
               },
             );
