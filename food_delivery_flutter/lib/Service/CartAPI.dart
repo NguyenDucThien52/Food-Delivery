@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:ffi';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:http/http.dart' as http;
 import 'package:food_delivery/Model/Cart.dart';
 

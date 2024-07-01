@@ -1,11 +1,14 @@
 import 'dart:math';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Model/CartItem.dart';
+import 'package:food_delivery/Model/FavoriteFood.dart';
 import 'package:food_delivery/Model/Review.dart';
 import 'package:food_delivery/Service/CartItemAPI.dart';
+import 'package:food_delivery/Service/FavoriteFoodAPI.dart';
 import 'package:food_delivery/Service/ReviewAPI.dart';
 
 import '../../Model/Cart.dart';
@@ -23,11 +26,18 @@ class ProductDetail_page extends StatefulWidget {
 
 class _ProductDetail_pageState extends State<ProductDetail_page> {
   late Future<List<Review>> review;
+  late Future<FavoriteFood> favoritefood;
+  late String? email;
+  int id = 0;
 
   @override
   void initState() {
     super.initState();
     review = ReviewService().fetchReviews(widget.product.product_id);
+    favoritefood = FavoriteFoodService().getFavoriteFoodByProduct(widget.product.product_id);
+    favoritefood.then((value) {
+      email = value.email;
+    });
   }
 
   @override
@@ -46,7 +56,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
           Row(
             children: [
               Expanded(
-                flex: 4,
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -74,11 +84,47 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
               Expanded(
                 child: Column(
                   children: [
-                    IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.favorite_border),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: FutureBuilder(
+                          future: favoritefood,
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return Center(child: CircularProgressIndicator());
+                            } else if (snapshot.hasError) {
+                              return Center(child: Text('Error: ${snapshot.error}'));
+                            } else if (!snapshot.hasData) {
+                              return Center(child: Text('No products found in cart'));
+                            } else {
+                              return IconButton(
+                                onPressed: () {
+                                  if (email == "") {
+                                    setState(() {
+                                      email = FirebaseAuth.instance.currentUser!.email;
+                                      id = DateTime.now().millisecondsSinceEpoch;
+                                    });
+                                    FavoriteFoodService().saveFavoriteFood(FavoriteFood(
+                                        favoriteFood_id: id,
+                                        product_id: widget.product.product_id,
+                                        email: FirebaseAuth.instance.currentUser!.email));
+                                  } else {
+                                    if (id == 0) {
+                                      FavoriteFoodService().deleteFavoriteFood(snapshot.data!.favoriteFood_id);
+                                    } else {
+                                      FavoriteFoodService().deleteFavoriteFood(id);
+                                    }
+                                    setState(() {
+                                      email = "";
+                                    });
+                                  }
+                                },
+                                icon: email == "" ? Icon(Icons.favorite_border) : Icon(Icons.favorite),
+                              );
+                            }
+                          }),
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         FutureBuilder<List<Review>>(
                             future: review,
@@ -94,10 +140,12 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                                 for (int i = 0; i < snapshot.data!.length; i++) {
                                   rate += snapshot.data![i].rating;
                                 }
-                                return Text('(${snapshot.data!.length}) ${rate / snapshot.data!.length}');
+                                return Text(snapshot.data!.isEmpty
+                                    ? '(0) 0'
+                                    : '(${snapshot.data!.length}) ${rate / snapshot.data!.length}');
                               }
                             }),
-                        IconButton(onPressed: () {}, icon: Icon(Icons.star)),
+                        Icon(Icons.star),
                       ],
                     )
                   ],

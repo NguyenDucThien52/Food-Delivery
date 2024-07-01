@@ -50,7 +50,12 @@ class _OrderHistoryState extends State<OrderHistory> {
                   padding: EdgeInsets.all(10),
                   child: GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => OrderItem_page(order: orderSnapshot.data![index],)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => OrderItem_page(
+                                    order: orderSnapshot.data![index],
+                                  )));
                     },
                     child: SizedBox(
                       width: 390,
@@ -60,10 +65,32 @@ class _OrderHistoryState extends State<OrderHistory> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("Tổng giá hóa đơn: ${orderSnapshot.data![index].totalAmount.toStringAsFixed(0)} đ", style: TextStyle(fontSize: 18),),
+                              Text(
+                                "Tổng giá hóa đơn: ${orderSnapshot.data![index].totalAmount.toStringAsFixed(0)} đ",
+                                style: TextStyle(fontSize: 18),
+                              ),
                               Text("Số lượng sản phẩm: ${orderSnapshot.data![index].quantity.toStringAsFixed(0)}"),
-                              Text("Date: ${orderSnapshot.data![index].orderDate.hour}:${orderSnapshot.data![index].orderDate.minute} - ${orderSnapshot.data![index].orderDate.day}/${orderSnapshot.data![index].orderDate.month}/${orderSnapshot.data![index].orderDate.year}"),
-                              Text("Phương thức thanh toán: ${orderSnapshot.data![index].paymentMethod}", style: TextStyle(fontSize: 12),),
+                              Text(
+                                  "Date: ${orderSnapshot.data![index].orderDate.hour}:${orderSnapshot.data![index].orderDate.minute} - ${orderSnapshot.data![index].orderDate.day}/${orderSnapshot.data![index].orderDate.month}/${orderSnapshot.data![index].orderDate.year}"),
+                              Text(
+                                "Phương thức thanh toán: ${orderSnapshot.data![index].paymentMethod}",
+                                style: TextStyle(fontSize: 12),
+                              ),
+                              RichText(
+                                text: TextSpan(children: [
+                                  TextSpan(text: "Trạng thái: ", style: TextStyle(color: Colors.black87)),
+                                  orderSnapshot.data![index].order_Status == "Đang giao hàng"
+                                      ? TextSpan(text:
+                                    "● Đang giao hàng",
+                                    style: TextStyle(color: Colors.orange),
+                                  )
+                                      : TextSpan(text:
+                                    "● Đã nhận hàng",
+                                    style: TextStyle(color: Colors.green),
+                                  ),
+                                ]),
+                              ),
+
                             ],
                           ),
                         ),

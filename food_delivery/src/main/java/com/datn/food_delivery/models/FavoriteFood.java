@@ -2,20 +2,20 @@ package com.datn.food_delivery.models;
 
 public class FavoriteFood {
     private Long favoriteFood_id;
-    private int product_id;
-    private Long user_id;
+    private Long product_id;
+    private String email;
 
     public FavoriteFood() {
     }
 
-    public FavoriteFood(Long favoriteFood_id, int food_id, Long user_id) {
+    public FavoriteFood(Long favoriteFood_id, Long product_id, String email) {
         this.favoriteFood_id = favoriteFood_id;
-        this.product_id = food_id;
-        this.user_id = user_id;
+        this.product_id = product_id;
+        this.email = email;
     }
 
-    public FavoriteFood(int food_id) {
-        this.product_id = food_id;
+    public FavoriteFood(Long product_id) {
+        this.product_id = product_id;
     }
 
     public long getFavoriteFood_id() {
@@ -26,19 +26,19 @@ public class FavoriteFood {
         this.favoriteFood_id = favoriteFood_id;
     }
 
-    public int getProduct_id() {
+    public Long getProduct_id() {
         return product_id;
     }
 
-    public void setProduct_id(int product_id) {
+    public void setProduct_id(Long product_id) {
         this.product_id = product_id;
     }
 
-    public Long getUser_id() {
-        return user_id;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUser_id(Long user_id) {
-        this.user_id = user_id;
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

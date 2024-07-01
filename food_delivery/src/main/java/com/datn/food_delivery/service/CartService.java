@@ -26,7 +26,6 @@ public class CartService {
         ApiFuture<QuerySnapshot> future = firestore.collection("carts").whereEqualTo("email",email).limit(1).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
         Cart cart = documents.get(0).toObject(Cart.class);
-        System.out.println(cart.getCart_id());
         return cart;
     }
 }

@@ -21,7 +21,7 @@ public class ReviewController {
     }
 
     @GetMapping("/getreviewbyproductandemail")
-    public Review getReviewByProductId(@RequestParam Long product_id,@RequestParam String email) throws ExecutionException, InterruptedException {
+    public Review getReviewByProductId(@RequestParam Long product_id,String email) throws ExecutionException, InterruptedException {
         return reviewService.getRate(product_id, email);
     }
 

@@ -9,6 +9,7 @@ class Order {
   final String paymentMethod;
   final String email;
   final int receiver_id;
+  final String order_Status;
 
   const Order(
       {required this.order_id,
@@ -18,7 +19,8 @@ class Order {
       required this.deliveryAddress,
       required this.paymentMethod,
       required this.email,
-      required this.receiver_id});
+      required this.receiver_id,
+      required this.order_Status});
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
@@ -30,6 +32,7 @@ class Order {
       paymentMethod: json['paymentMethod'],
       email: json['email'],
       receiver_id: json['receiver_id'],
+        order_Status: json['order_Status'],
     );
   }
 
@@ -43,6 +46,7 @@ class Order {
       'paymentMethod': paymentMethod,
       'email': email,
       'receiver_id': receiver_id,
+      'order_Status': order_Status,
     };
   }
 
@@ -56,6 +60,7 @@ class Order {
       paymentMethod: json['paymentMethod'],
       email: json['email'],
       receiver_id: json['receiver_id'],
+        order_Status: json['order_Status'],
     );
   }
 }

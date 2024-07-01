@@ -69,7 +69,6 @@ public class CategoryPageController {
 
     @GetMapping("/destroy/{id}")
     public String deleteCategory(@PathVariable Long id) {
-        System.out.println(id);
         categoryService.deleteCategory(id);
         return "redirect:/fooddelivery/category";
     }

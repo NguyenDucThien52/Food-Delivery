@@ -392,7 +392,8 @@ class _Order_pageState extends State<Order_page> {
                       quantity: quantity,
                       paymentMethod:
                           _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
-                      receiver_id: id));
+                      receiver_id: id,
+                  order_Status: "Đang giao hàng"));
                   for (int i = 0; i < widget.productList.length; i++) {
                     int orderItemId = Random().nextInt(10000000);
                     OrderItemService().saveOrderItem(OrderItem(

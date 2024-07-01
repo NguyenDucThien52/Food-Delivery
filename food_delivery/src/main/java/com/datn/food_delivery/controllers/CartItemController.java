@@ -33,7 +33,6 @@ public class CartItemController {
 
     @DeleteMapping("/delete")
     void deleteCartItem(@RequestParam Long cartItem_id) throws ExecutionException, InterruptedException{
-        System.out.println(cartItem_id);
         cartItemService.deleteCartItem(cartItem_id);
     }
 }

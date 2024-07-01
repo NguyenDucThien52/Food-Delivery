@@ -24,7 +24,6 @@ public class OrderItemController {
 
     @PostMapping("/insert")
     void insertOrderItem(@RequestBody OrderItem orderItem) {
-        System.out.println(orderItem.getProduct_id());
         orderItemService.saveOrderItem(orderItem);
     }
 }

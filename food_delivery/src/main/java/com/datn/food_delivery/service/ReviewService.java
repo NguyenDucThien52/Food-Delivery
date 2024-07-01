@@ -14,7 +14,6 @@ import java.util.concurrent.ExecutionException;
 public class ReviewService {
 
     public void saveReview(Review review) {
-        System.out.println(review.getReview_id());
         Firestore firestore = FirestoreClient.getFirestore();
         DocumentReference docRef = firestore.collection("reviews").document(String.valueOf(review.getReview_id()));
         ApiFuture<WriteResult> Result = docRef.set(review);

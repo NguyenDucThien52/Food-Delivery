@@ -15,11 +15,12 @@ public class Order {
     private String paymentMethod;
     private String email;
     private Long receiver_id;
+    private String Order_Status;
 
     public Order() {
     }
 
-    public Order(Long order_id, double totalAmount, int quantity, Date orderDate, String deliveryAddress, String paymentMethod, String email, Long receiver_id) {
+    public Order(Long order_id, double totalAmount, int quantity, Date orderDate, String deliveryAddress, String paymentMethod, String email, Long receiver_id, String Order_Status) {
         this.order_id = order_id;
         this.totalAmount = totalAmount;
         this.quantity = quantity;
@@ -28,6 +29,7 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.email = email;
         this.receiver_id = receiver_id;
+        this.Order_Status = Order_Status;
     }
 
 
@@ -95,4 +97,11 @@ public class Order {
         this.deliveryAddress = deliveryAddress;
     }
 
+    public String getOrder_Status() {
+        return Order_Status;
+    }
+
+    public void setOrder_Status(String order_Status) {
+        Order_Status = order_Status;
+    }
 }

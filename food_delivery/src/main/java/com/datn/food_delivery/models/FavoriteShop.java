@@ -1,25 +1,40 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.*;
-
-//@Entity
 public class FavoriteShop {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long favorite_id;
-//    @ManyToOne
-//    @JoinColumn(name = "shop_id")
-//    private Shop shop;
+    private Long favoriteShop_id;
+    private Long shop_id;
+    private String email;
 
     public FavoriteShop() {
     }
 
-    public long getFavorite_id() {
-        return favorite_id;
+    public FavoriteShop(Long favoriteShop_id, Long shop_id, String email) {
+        this.favoriteShop_id = favoriteShop_id;
+        this.shop_id = shop_id;
+        this.email = email;
     }
 
-    public void setFavorite_id(long favorite_id) {
-        this.favorite_id = favorite_id;
+    public long getFavoriteShop_id() {
+        return favoriteShop_id;
     }
 
+    public void setFavoriteShop_id(long favoriteShop_id) {
+        this.favoriteShop_id = favoriteShop_id;
+    }
+
+    public Long getShop_id() {
+        return shop_id;
+    }
+
+    public void setShop_id(Long shop_id) {
+        this.shop_id = shop_id;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }

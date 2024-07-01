@@ -41,7 +41,7 @@ public class ShopPageController {
         }
         Shop shop = new Shop(shopDTO.getShop_id(), shopDTO.getName(), shopDTO.getAddress(), imageURl);
         shopService.saveShop(shop);
-        return "redirect:fooddelivery/shop";
+        return "redirect:/fooddelivery/shop";
     }
 
     @GetMapping("/edit/{id}")
