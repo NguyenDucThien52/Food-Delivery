@@ -40,6 +40,22 @@ public class ProductService {
         return products;
     }
 
+    public List<Product> getProductsByKeyword(String keyword) throws InterruptedException, ExecutionException {
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> future = firestore.collection("products").get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        List<Product> products = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents){
+            Product product = document.toObject(Product.class);
+            if(product.getName().toLowerCase().contains(keyword.toLowerCase())){
+                product.setProduct_id(Long.parseLong(document.getId()));
+                products.add(product);
+            }
+        }
+        return products;
+    }
+
     public String uploadFile(MultipartFile file) throws IOException {
         Bucket bucket = StorageClient.getInstance().bucket();
         String blobName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();

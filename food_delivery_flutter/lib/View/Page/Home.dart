@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +12,7 @@ import 'package:food_delivery/Service/CategoryAPI.dart';
 import 'package:food_delivery/Service/ProductAPI.dart';
 import 'package:food_delivery/View/Page/Category_page.dart';
 import 'package:food_delivery/View/Page/ProductDetail_page.dart';
+import 'package:food_delivery/View/Page/Search.dart';
 
 import '../../Model/Cart.dart';
 import '../../Model/Product.dart';
@@ -58,6 +60,36 @@ class _HomeState extends State<Home> {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 20),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text("Xin chao ${FirebaseAuth.instance.currentUser!.displayName}"),
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context).colorScheme.background,
+                                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black87.withOpacity(0.2),
+                                                blurRadius: 2,
+                                              )
+                                            ],
+                                          ),
+                                          child: IconButton(
+                                            onPressed: () {
+                                              Navigator.push(
+                                                  context, MaterialPageRoute(builder: (context) => Search()));
+                                            },
+                                            icon: Icon(
+                                              Icons.search_rounded,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                   SizedBox(
                                     height: 200,
                                     child: FutureBuilder(
@@ -77,9 +109,8 @@ class _HomeState extends State<Home> {
                                                         context,
                                                         MaterialPageRoute(
                                                             builder: (context) => Category_page(
-                                                                  category: snapshot.data![index],
-                                                                  cart: cartSnapshot.data,
-                                                                )));
+                                                                category: snapshot.data![index],
+                                                                cart: cartSnapshot.data)));
                                                   },
                                                   child: CategoryItem(
                                                       name: snapshot.data![index].name,

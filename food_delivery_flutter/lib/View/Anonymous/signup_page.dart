@@ -36,11 +36,10 @@ class _SignUpPageState extends State<SignUpPage> {
   final _passowrdKey = GlobalKey<FormFieldState>();
   final _confirmpasswordKey = GlobalKey<FormFieldState>();
   final _phoneKey = GlobalKey<FormFieldState>();
-  String errorMessage = '';
 
   var id = Random().nextInt(1000);
   final UserService userService = UserService();
-  final CartService cartService = CartService();
+  // final CartService cartService = CartService();
 
   @override
   Widget build(BuildContext context) {
@@ -340,6 +339,8 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
+      userCredential.user?.updateDisplayName(_nameController  .text);
+
       userService.registerUser(
         Person(
             fullName: _nameController.text,
@@ -348,14 +349,11 @@ class _SignUpPageState extends State<SignUpPage> {
             phoneNumber: _phoneController.text,
         imageURL: ""),
       );
-      cartService.saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text));
-
+      CartService().saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text));
       print("Registered user: ${userCredential.user}");
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
     } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-      });
-      print('Registration failed: $errorMessage');
+      print('Registration failed!');
     }
   }
 }

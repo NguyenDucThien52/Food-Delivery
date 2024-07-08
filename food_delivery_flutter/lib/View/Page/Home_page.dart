@@ -19,21 +19,23 @@ class Home_page extends StatefulWidget {
 
 class _Home_pageState extends State<Home_page> {
   var selectedIndex = 0;
-  late Future<Cart> cart;
+  late Future<Cart> cartF;
+  late Cart cart;
   late Person user;
   late Future<Person> person;
-  // late Future<List<Order>> orders;
   late List<Order> orders;
 
   @override
   void initState() {
     super.initState();
-    cart = CartService().fetchCart();
-    print(FirebaseAuth.instance.currentUser!.email);
+    cartF = CartService().fetchCart();
     person = UserService().getUser(FirebaseAuth.instance.currentUser!.email);
     person.then((value) {
       user =
           Person(email: value.email, phoneNumber: value.phoneNumber, address: value.address, fullName: value.fullName, imageURL: value.imageURL);
+    });
+    cartF.then((value) {
+      cart = Cart(cart_id: value.cart_id, email: value.email);
     });
     OrderService().fetchOrder().then((value) {
       orders = value;
@@ -50,7 +52,7 @@ class _Home_pageState extends State<Home_page> {
       case 1:
         page = Shop_page();
       case 2:
-        page = Other(user: user);
+        page = Other(cart: cart);
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
@@ -62,7 +64,7 @@ class _Home_pageState extends State<Home_page> {
       ),
     );
     return FutureBuilder<Cart>(
-        future: cart,
+        future: cartF,
         builder: (context, snapshot) {
           return Scaffold(
             body: mainArea,

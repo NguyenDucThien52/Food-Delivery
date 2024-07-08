@@ -142,7 +142,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                                 }
                                 return Text(snapshot.data!.isEmpty
                                     ? '(0) 0'
-                                    : '(${snapshot.data!.length}) ${rate / snapshot.data!.length}');
+                                    : '(${snapshot.data!.length}) ${(rate / snapshot.data!.length).toStringAsFixed(2)}');
                               }
                             }),
                         Icon(Icons.star),

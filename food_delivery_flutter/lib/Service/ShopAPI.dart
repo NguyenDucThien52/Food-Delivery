@@ -17,4 +17,15 @@ class ShopService{
       throw Exception("Failed to load shops");
     }
   }
+
+  Future<List<Shop>> getShopByKeyword(String keyword) async{
+    final response = await http.get(Uri.parse('$apiUrl/getShopByKeyword?keyword=$keyword'));
+    if(response.statusCode == 200){
+      List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
+      List<Shop> shops = body.map((dynamic item) => Shop.fromJson(item)).toList();
+      return shops;
+    }else{
+      throw Exception("Failed to load shops");
+    }
+  }
 }

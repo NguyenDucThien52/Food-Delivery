@@ -31,7 +31,7 @@ public class ShopPageController {
         return "shop/create";
     }
 
-    @PostMapping("store")
+    @PostMapping("/store")
     public String SaveShop(ShopDTO shopDTO) throws IOException {
         final Long id = new Random().nextLong(1000000);
         shopDTO.setShop_id(id);

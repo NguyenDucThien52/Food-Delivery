@@ -12,7 +12,7 @@
 <body>
 <div class="container">
     <h1 class="text-center">Create Products</h1>
-    <form action="#" th:action="@{store}" th:object="${ProductDTO}" method="post" enctype="multipart/form-data">
+    <form th:action="@{store}" th:object="${ShopDTO}" method="post" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>
             <input type="text" class="form-control" name="name" id="name" aria-describedby="helpId"

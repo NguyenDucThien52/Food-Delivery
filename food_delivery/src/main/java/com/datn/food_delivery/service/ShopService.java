@@ -39,6 +39,22 @@ public class ShopService {
         return shops;
     }
 
+    public List<Shop> getShopsByKeyword(String keyword) throws ExecutionException, InterruptedException {
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> querySnapshot = firestore.collection("shops").get();
+        List<QueryDocumentSnapshot> documents = querySnapshot.get().getDocuments();
+
+        List<Shop> shops = new ArrayList<>();
+        for (QueryDocumentSnapshot document : documents) {
+            Shop shop = document.toObject(Shop.class);
+            if(shop.getName().contains(keyword) || shop.getAddress().contains(keyword)){
+                shop.setShop_id(Long.parseLong(document.getId()));
+                shops.add(shop);
+            }
+        }
+        return shops;
+    }
+
     public Shop getShopById(Long shop_id) throws ExecutionException, InterruptedException {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> querySnapshot = firestore.collection("shops").whereEqualTo("shop_id", shop_id).get();

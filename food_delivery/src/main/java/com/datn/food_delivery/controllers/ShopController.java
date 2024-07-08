@@ -5,6 +5,7 @@ import com.datn.food_delivery.service.ShopService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -19,5 +20,10 @@ public class ShopController {
     @GetMapping("")
     public List<Shop> getAllShops() throws ExecutionException, InterruptedException {
         return shopService.getAllShops();
+    }
+
+    @GetMapping("/getShopByKeyword")
+    public List<Shop> getShopByKeyword(@RequestParam String keyword) throws ExecutionException, InterruptedException {
+        return shopService.getShopsByKeyword(keyword);
     }
 }

@@ -6,12 +6,14 @@ import 'package:food_delivery/Model/User.dart';
 import 'package:food_delivery/View/Page/OrderHistory.dart';
 import 'package:food_delivery/View/Page/Profile.dart';
 
+import '../../Model/Cart.dart';
 import '../../Model/Order.dart';
+import 'FavoriteFood.dart';
 
 class Other extends StatefulWidget {
-  final Person user;
+  final Cart cart;
 
-  const Other({required this.user});
+  const Other({required this.cart});
 
   @override
   State<Other> createState() => _OtherState();
@@ -54,7 +56,7 @@ class _OtherState extends State<Other> {
             ),
             GestureDetector(
               onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => Profile(user: widget.user)));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => Profile()));
               },
               child: Card(
                 color: Theme.of(context).colorScheme.background,
@@ -66,7 +68,7 @@ class _OtherState extends State<Other> {
             ),
             GestureDetector(
               onTap: (){
-
+                Navigator.push(context, MaterialPageRoute(builder: (context) => FavoriteFood_page(cart:widget.cart)));
               },
               child: Card(
                 color: Theme.of(context).colorScheme.background,
@@ -78,7 +80,8 @@ class _OtherState extends State<Other> {
             ),
             GestureDetector(
               onTap: (){
-
+                FirebaseAuth.instance.signOut();
+                Navigator.pop(context);
               },
               child: Card(
                 color: Theme.of(context).colorScheme.background,

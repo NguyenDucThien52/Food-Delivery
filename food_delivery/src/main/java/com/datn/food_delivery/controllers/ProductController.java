@@ -39,6 +39,11 @@ public class ProductController {
     Product getProductById(@RequestParam Long product_id) throws  ExecutionException, InterruptedException{
         return firebaseService.getProductByid(product_id);
     }
+
+    @GetMapping("/getProductbyKeyWord")
+    List<Product> getProductsByKeyWord(@RequestParam String keyword) throws  ExecutionException, InterruptedException{
+        return firebaseService.getProductsByKeyword(keyword);
+    }
 }
 
 

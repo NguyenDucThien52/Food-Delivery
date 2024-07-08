@@ -8,11 +8,16 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.concurrent.ExecutionException;
 
-@Controller
+@RestController
 @RequestMapping(path ="/api/favorite_shops")
 public class FavoriteShopController {
     @Autowired
     private FavoriteShopService favoriteShopService;
+
+    @GetMapping("")
+    public FavoriteShop getFavoriteShop(@RequestParam Long shop_id, String email) throws ExecutionException, InterruptedException {
+        return favoriteShopService.favoriteShop(shop_id, email);
+    }
 
     @PostMapping("/insert")
     public void insertFavoriteShop(@RequestBody FavoriteShop favoriteShop) {

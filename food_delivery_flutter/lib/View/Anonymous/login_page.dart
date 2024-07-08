@@ -18,9 +18,6 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   bool obscureText = true; // show/hide password
 
-  String errorMessage = '';
-  String content = '';
-
   // Validate
   final _formKey = GlobalKey<FormState>();
   final _emailKey = GlobalKey<FormFieldState>();
@@ -189,40 +186,17 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
 
   Future<void> login() async {
     try {
-
-        await _auth.signInWithEmailAndPassword(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        setState(() {
-          errorMessage = '';
-        });
-        Navigator.push(context, MaterialPageRoute(builder: (context) => Home_page()));
-    } catch (e) {
-      setState(() {
-        errorMessage = e.toString();
-        print(e);
-      });
-    }
-  }
-
-  Future<void> register() async {
-    try {
-      UserCredential userCredential =
-          await _auth.createUserWithEmailAndPassword(email: _emailController.text, password: _passwordController.text);
-      setState(() {
-        errorMessage = '';
-      });
-      print("Registered user: ${userCredential.user}");
-      AlertDialog(
-        title: Text("Thông báo"),
-        content: Text("Bạn đã đăng ký thành công tài khoản"),
+      await _auth.signInWithEmailAndPassword(
+        email: _emailController.text,
+        password: _passwordController.text,
       );
-    } catch (e) {
       setState(() {
-        errorMessage = e.toString();
+        _emailController.text = "";
+        _passwordController.text = "";
       });
-      print('Registration failed: $errorMessage');
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Home_page()));
+    } catch (e) {
+      print(e);
     }
   }
 }

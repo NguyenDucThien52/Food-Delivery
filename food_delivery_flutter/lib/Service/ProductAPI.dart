@@ -51,7 +51,7 @@ class ProductService {
     }
   }
 
-  Future<int> insertProducts(Product product) async {
+  Future<void> insertProducts(Product product) async {
     final response = await http.post(
       Uri.parse('$apiUrl/insert'),
       headers: <String, String>{
@@ -60,9 +60,21 @@ class ProductService {
       body: jsonEncode(product.toJson()),
     );
     if (response.statusCode == 200) {
-      return int.parse(response.body);
+      print("Create product successfully");
     }else{
       throw Exception('Failed to add product');
+    }
+  }
+  
+  Future<List<Product>> getProductbyKeyWord(String keyword) async{
+    print('$apiUrl/getProductbyKeyWord?keyword=$keyword');
+    final response = await http.get(Uri.parse('$apiUrl/getProductbyKeyWord?keyword=$keyword'));
+    if(response.statusCode == 200){
+      List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
+      List<Product> products = body.map((dynamic item) => Product.fromJson(item)).toList();
+      return products;
+    }else{
+      throw Exception("Failed to load product");
     }
   }
 }

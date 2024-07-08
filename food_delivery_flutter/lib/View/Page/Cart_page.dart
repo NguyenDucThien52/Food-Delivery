@@ -92,6 +92,7 @@ class _Cart_pageState extends State<Cart_page> {
                               itemBuilder: (context, index) {
                                 CartItem cartItem = cartItemSnapshot.data![index];
                                 Product product = snapshot.data![index];
+                                print('${product.name}: ${product.price} có ${cartItem.quantity}');
                                 return Padding(
                                   padding: EdgeInsets.symmetric(vertical: 20),
                                   child: ListTile(
