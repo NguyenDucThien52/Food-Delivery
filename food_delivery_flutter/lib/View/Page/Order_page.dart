@@ -22,7 +22,7 @@ class Order_page extends StatefulWidget {
   final double total;
   final Person user;
   final List<CartItem> cartItemsList;
-  final List<Product> productList;
+  final List<Product?> productList;
 
   const Order_page(
       {super.key, required this.total, required this.user, required this.cartItemsList, required this.productList});
@@ -38,6 +38,14 @@ class _Order_pageState extends State<Order_page> {
   TextEditingController _phoneNumberController = TextEditingController();
 
   late Receiver receiver;
+
+  void showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã thanh toán thành công!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   void _showPopuNamePhonenumber(BuildContext context) {
     showDialog(
@@ -151,6 +159,9 @@ class _Order_pageState extends State<Order_page> {
     final double tax = widget.total * 0.03;
     final double ship = widget.total * 0.15;
     final double Total = widget.total + tax + ship;
+    for(int i=0; i<widget.productList.length; i++){
+      print(widget.productList[i]!.name);
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -261,8 +272,8 @@ class _Order_pageState extends State<Order_page> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("x${widget.cartItemsList[i].quantity} ${widget.productList[i].name}"),
-                            Text("${widget.productList[i].price*widget.cartItemsList[i].quantity} đ"),
+                            Text("x${widget.cartItemsList[i].quantity} ${widget.productList[i]!.name}"),
+                            Text("${widget.productList[i]!.price*widget.cartItemsList[i].quantity} đ"),
                           ],
                         ),
                       ),
@@ -394,7 +405,7 @@ class _Order_pageState extends State<Order_page> {
                           _selectedValue == 1 ? "Thanh toán khi nhận hàng" : "Thanh toán bằng tài khoản ngân hàng",
                       receiver_id: id,
                   order_Status: "Đang giao hàng"));
-                  for (int i = 0; i < widget.productList.length; i++) {
+                  for (int i = 0; i < widget.cartItemsList.length; i++) {
                     int orderItemId = Random().nextInt(10000000);
                     OrderItemService().saveOrderItem(OrderItem(
                         orderItem_id: orderItemId,
@@ -405,6 +416,7 @@ class _Order_pageState extends State<Order_page> {
                   };
                   Navigator.pop(context);
                   Navigator.pop(context);
+                  showSnackBar(context);
                 },
                 child: Text("Thanh Toán"),
               ),

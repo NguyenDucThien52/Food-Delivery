@@ -59,8 +59,9 @@ public class CategoryPageController {
     public String updateCategory(CategoryDTO categoryDTO) throws IOException, ExecutionException, InterruptedException {
         Category category_old = categoryService.getCategoryById(categoryDTO.getCategory_id());
         String imageURL = category_old.getImageURL();
-        if(imageURL==null){
-            imageURL = categoryService.uploadFile(categoryDTO.getImageURL());
+        String newImageURL = categoryService.uploadFile(categoryDTO.getImageURL());
+        if(newImageURL!=null){
+            imageURL = newImageURL;
         }
         Category category = new Category(categoryDTO.getCategory_id(), categoryDTO.getName(), imageURL);
         categoryService.saveCategory(category);

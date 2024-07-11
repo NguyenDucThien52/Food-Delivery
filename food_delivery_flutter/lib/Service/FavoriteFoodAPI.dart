@@ -30,7 +30,6 @@ class FavoriteFoodService {
   }
 
   Future<void> deleteFavoriteFood(int favoriteFood_id) async {
-    print('$apiUrl/delete?favoriteFood_id=$favoriteFood_id');
     final response = await http.get(Uri.parse('$apiUrl/delete?favoriteFood_id=$favoriteFood_id'));
     if (response.statusCode == 200) {
       print("Delete favorite food successfullly");

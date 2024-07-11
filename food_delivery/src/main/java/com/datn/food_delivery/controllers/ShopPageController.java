@@ -57,8 +57,9 @@ public class ShopPageController {
     public String UpdateShop(ShopDTO shopDTO) throws ExecutionException, InterruptedException, IOException {
         Shop shop_old = shopService.getShopById(shopDTO.getShop_id());
         String imageURl = shop_old.getImageURL();
-        if(imageURl==null){
-            imageURl = shopService.uploadFile(shopDTO.getImageURL());
+        String newImageURl = shopService.uploadFile(shopDTO.getImageURL());
+        if(newImageURl!=null){
+            imageURl = newImageURl;
         }
         Shop shop = new Shop(shopDTO.getShop_id(), shopDTO.getName(), shopDTO.getAddress(), imageURl);
         shopService.saveShop(shop);

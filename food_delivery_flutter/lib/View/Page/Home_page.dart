@@ -39,8 +39,8 @@ class _Home_pageState extends State<Home_page> {
     });
     OrderService().fetchOrder().then((value) {
       orders = value;
-      print(orders.length);
     });
+    print("Hello");
   }
 
   @override
@@ -68,10 +68,7 @@ class _Home_pageState extends State<Home_page> {
         builder: (context, snapshot) {
           return Scaffold(
             body: mainArea,
-            // floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
             floatingActionButton: FloatingActionButton(
-              // backgroundColor: const Color.fromRGBO(82, 170, 94, 1.0),
-              // tooltip: 'Increment',
               shape: const CircleBorder(),
               onPressed: () {
                 Navigator.push(context,
@@ -95,7 +92,6 @@ class _Home_pageState extends State<Home_page> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.list_outlined),
                   label: "Khác",
-                  // backgroundColor: Colors.lightGreen,
                 ),
               ],
               currentIndex: selectedIndex,

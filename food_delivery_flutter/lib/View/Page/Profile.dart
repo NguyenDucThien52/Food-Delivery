@@ -25,6 +25,14 @@ class _ProfileState extends State<Profile> {
   late String imageURL;
   late String imageDatabase;
 
+  void showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã cập nhật hồ sơ cá nhân thành công!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -36,6 +44,7 @@ class _ProfileState extends State<Profile> {
       _addressController.text = value.address;
       imageURL = value.imageURL;
       imageDatabase = value.imageURL;
+      print(imageDatabase=="");
     });
     // imageURL = widget.user.imageURL;
   }
@@ -47,15 +56,13 @@ class _ProfileState extends State<Profile> {
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         title: Text("Thông tin cá nhân"),
         leading: IconButton(
-          onPressed: (){
-            print("$imageURL and database:  $imageDatabase");
-            if(imageURL!=imageDatabase){
-              FirebaseStorage.instance.refFromURL(imageURL).delete();
-            }
-            Navigator.pop(context);
-          },
-          icon: Icon(Icons.arrow_back)
-        ),
+            onPressed: () {
+              if (imageURL != imageDatabase) {
+                FirebaseStorage.instance.refFromURL(imageURL).delete();
+              }
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_back)),
       ),
       body: SingleChildScrollView(
         child: Form(
@@ -68,137 +75,141 @@ class _ProfileState extends State<Profile> {
                 return Center(child: Text('Error: ${snapshot.error}'));
               } else if (!snapshot.hasData) {
                 return Center(
-                  child: Text("No information about this user is found"),
+                  child: Text("Không tìm  thấy thông tin người dùng"),
                 );
               } else {
-              return Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.all(30),
-                    child: GestureDetector(
-                      onLongPress: () async {
-                        ImagePicker imagePicker = ImagePicker();
-                        XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
-                        if (image == null) return;
-                        String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-                        Reference reference = FirebaseStorage.instance.ref();
-                        Reference referenceDirImages = reference.child('images');
-                        Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-                        try {
-                          await referenceImageToUpload.putFile((File(image.path)));
-                          imageURL = await referenceImageToUpload.getDownloadURL();
-                        } catch (error) {
-                          print(error.toString());
-                        }
-                        setState(() {
-                          imageURL = imageURL;
-                        });
-                      },
-                      onTap: () async {
-                        ImagePicker imagePicker = ImagePicker();
-                        XFile? image = await imagePicker.pickImage(source: ImageSource.camera);
-                        if (image == null) return;
-                        String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
-                        Reference reference = FirebaseStorage.instance.ref();
-                        Reference referenceDirImages = reference.child('images');
-                        Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
-                        try {
-                          if (imageURL != "") {
-                            FirebaseStorage.instance.refFromURL(imageURL).delete();
+                return Column(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.all(30),
+                      child: GestureDetector(
+                        onLongPress: () async {
+                          ImagePicker imagePicker = ImagePicker();
+                          XFile? image = await imagePicker.pickImage(source: ImageSource.gallery);
+                          if (image == null) return;
+                          String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+                          Reference reference = FirebaseStorage.instance.ref();
+                          Reference referenceDirImages = reference.child('images');
+                          Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+                          try {
+                            await referenceImageToUpload.putFile((File(image.path)));
+                            imageURL = await referenceImageToUpload.getDownloadURL();
+                          } catch (error) {
+                            print(error.toString());
                           }
-                          await referenceImageToUpload.putFile((File(image.path)));
-                          imageURL = await referenceImageToUpload.getDownloadURL();
-                        } catch (error) {
-                          print(error.toString());
-                        }
-                        setState(() {
-                          imageURL = imageURL;
-                        });
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                        child: Image.network(
-                          imageURL == ""
-                              ? "https://firebasestorage.googleapis.com/v0/b/food-delivery-18948.appspot.com/o/user-circle.511x512.png?alt=media&token=45139d47-bce4-4c61-abce-e5746e89b6e5"
-                              : imageURL,
-                          width: 200,
-                          height: 200,
-                          fit: BoxFit.cover,
+                          setState(() {
+                            imageURL = imageURL;
+                          });
+                        },
+                        onTap: () async {
+                          ImagePicker imagePicker = ImagePicker();
+                          XFile? image = await imagePicker.pickImage(source: ImageSource.camera);
+                          if (image == null) return;
+                          String uniqueFileName = DateTime.now().millisecondsSinceEpoch.toString();
+                          Reference reference = FirebaseStorage.instance.ref();
+                          Reference referenceDirImages = reference.child('images');
+                          Reference referenceImageToUpload = referenceDirImages.child(uniqueFileName);
+                          try {
+                            if (imageURL != "") {
+                              FirebaseStorage.instance.refFromURL(imageURL).delete();
+                            }
+                            await referenceImageToUpload.putFile((File(image.path)));
+                            imageURL = await referenceImageToUpload.getDownloadURL();
+                          } catch (error) {
+                            print(error.toString());
+                          }
+                          setState(() {
+                            imageURL = imageURL;
+                          });
+                        },
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(100)),
+                          child: Image.network(
+                            imageURL == ""
+                                ? "https://firebasestorage.googleapis.com/v0/b/food-delivery-18948.appspot.com/o/user-circle.511x512.png?alt=media&token=45139d47-bce4-4c61-abce-e5746e89b6e5"
+                                : imageURL,
+                            width: 200,
+                            height: 200,
+                            fit: BoxFit.cover,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: TextFormField(
-                      controller: _emailController,
-                      enabled: false,
-                      decoration: InputDecoration(
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                        controller: _emailController,
+                        enabled: false,
+                        decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(20),
+                              ),
+                            ),
+                            labelText: "Email"),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                        controller: _nameController,
+                        decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(20),
                             ),
                           ),
-                          labelText: "Email"),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: TextFormField(
-                      controller: _nameController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
-                          ),
+                          labelText: "Tên",
                         ),
-                        labelText: "Tên",
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: TextFormField(
-                      controller: _phoneController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                        controller: _phoneController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
                           ),
+                          labelText: "Số điện thoại",
                         ),
-                        labelText: "Số điện thoại",
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(10),
-                    child: TextFormField(
-                      controller: _addressController,
-                      decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(20),
+                    Padding(
+                      padding: EdgeInsets.all(10),
+                      child: TextFormField(
+                        controller: _addressController,
+                        decoration: InputDecoration(
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(20),
+                            ),
                           ),
+                          labelText: "Địa chỉ",
                         ),
-                        labelText: "Địa chỉ",
                       ),
                     ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      UserService().registerUser(Person(
-                          fullName: _nameController.text,
-                          email: _emailController.text,
-                          phoneNumber: _phoneController.text,
-                          address: _addressController.text,
-                          imageURL: imageURL));
-                      FirebaseStorage.instance.refFromURL(imageDatabase).delete();
-                      imageDatabase = imageURL;
-                    },
-                    child: Text("Cập nhật tài khoản"),
-                  ),
-                ],
-              );}
+                    ElevatedButton(
+                      onPressed: () {
+                        UserService().registerUser(Person(
+                            fullName: _nameController.text,
+                            email: _emailController.text,
+                            phoneNumber: _phoneController.text,
+                            address: _addressController.text,
+                            imageURL: imageURL));
+                        if (imageDatabase!="") {
+                          FirebaseStorage.instance.refFromURL(imageDatabase).delete();
+                        }
+                        imageDatabase = imageURL;
+                        showSnackBar(context);
+                      },
+                      child: Text("Cập nhật tài khoản"),
+                    ),
+                  ],
+                );
+              }
             },
           ),
         ),

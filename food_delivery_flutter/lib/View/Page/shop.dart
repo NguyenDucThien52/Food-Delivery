@@ -14,6 +14,22 @@ class _Shop_pageState extends State<Shop_page> {
   late Future<List<Shop>> shops;
   late Future<FavoriteShop> favoriteShop;
 
+  void showSnackBaradd(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã thêm thành công cửa hàng yêu thích!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showSnackBardelete(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã xóa thành công cửa hàng yêu thích!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -65,7 +81,7 @@ class _Shop_pageState extends State<Shop_page> {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(
-                    child: Text("No shop is found"),
+                    child: Text("Không tìm thấy cửa hàng"),
                   );
                 } else {
                   return ListView.builder(
@@ -94,13 +110,14 @@ class _Shop_pageState extends State<Shop_page> {
                                             fit: BoxFit.cover,
                                           ))),
                                   Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(snapshot.data![index].name, style: TextStyle(fontSize: 18),),
                                       Text(snapshot.data![index].address, style: TextStyle(color: Colors.black54),),
                                     ],
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(left: 120),
+                                    padding: EdgeInsets.only(left: 80),
                                     child: IconButton(
                                       onPressed: () async {
                                         if (fsSnapshot.data!.email == "") {

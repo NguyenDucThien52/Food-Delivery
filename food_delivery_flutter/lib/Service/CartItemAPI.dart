@@ -7,7 +7,6 @@ class CartItemService{
   final String apiURL = "http://192.168.1.4:8080/api/cartItems";
 
   Future<CartItem> fetchCartItem(int product_id, int cart_id) async{
-    print('$apiURL?product_id=$product_id&cart_id=$cart_id');
     final response = await http.get(Uri.parse('$apiURL?product_id=$product_id&cart_id=$cart_id'));
     if(response.statusCode == 200){
       return CartItem.fromJson(json.decode(response.body));
@@ -17,7 +16,6 @@ class CartItemService{
   }
 
   Future<List<CartItem>> fetchCartItemByCart(int cart_id) async{
-    print('$apiURL/getcartitemsbycart?cart_id=$cart_id');
     final response= await http.get(Uri.parse('$apiURL/getcartitemsbycart?cart_id=$cart_id'));
     if(response.statusCode == 200){
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
@@ -43,7 +41,6 @@ class CartItemService{
   }
   
   Future<void> deleteCartItem(int cartItem_id) async{
-    print('$apiURL/delete?cartItem_id=$cartItem_id');
     final response = await http.delete(Uri.parse('$apiURL/delete?cartItem_id=$cartItem_id'));
     if(response.statusCode == 200){
       print("Delete cartItem successfully!");

@@ -35,9 +35,9 @@
                 <thead>
                 <tr>
                     <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Function</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Hình ảnh</th>
+                    <th scope="col">Chức năng</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -47,12 +47,12 @@
                     <td><img th:src="${category.imageURL}" width="200" height="200"></td>
                     <td>
                         <a th:href="@{category/edit/{id}(id=${category.category_id})}">
-                            <button>Edit</button>
+                            <button>Sửa</button>
                         </a>
                     </td>
                     <td>
                         <a th:href="@{category/destroy/{id}(id=${category.category_id})}">
-                            <button>Delete</button>
+                            <button>Xóa</button>
                         </a>
                     </td>
                 </tr>

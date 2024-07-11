@@ -39,7 +39,15 @@ class _SignUpPageState extends State<SignUpPage> {
 
   var id = Random().nextInt(1000);
   final UserService userService = UserService();
+
   // final CartService cartService = CartService();
+  void showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã đăng ký tài khoản thành công!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -294,6 +302,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         if (_formKey.currentState!.validate() &&
                             _passwordController.text == _confirmpasswordController.text) {
                           register();
+                          showSnackBar(context);
                         }
                       },
                       style: ButtonStyle(
@@ -339,19 +348,19 @@ class _SignUpPageState extends State<SignUpPage> {
         email: _emailController.text,
         password: _passwordController.text,
       );
-      userCredential.user?.updateDisplayName(_nameController  .text);
+      userCredential.user?.updateDisplayName(_nameController.text);
 
       userService.registerUser(
         Person(
             fullName: _nameController.text,
             email: _emailController.text,
-            address: 'Le Thanh Nghi, Hai Ba Trung, Ha Noi',
+            address: "",
             phoneNumber: _phoneController.text,
-        imageURL: ""),
+            imageURL: ""),
       );
       CartService().saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text));
       print("Registered user: ${userCredential.user}");
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
     } catch (e) {
       print('Registration failed!');
     }

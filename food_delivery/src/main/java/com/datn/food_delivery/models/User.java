@@ -7,6 +7,7 @@ public class User {
     private String phoneNumber;
     private String address;
     private String imageURL;
+    private String roles;
 
     public User() {
     }

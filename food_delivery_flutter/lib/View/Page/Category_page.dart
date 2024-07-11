@@ -51,7 +51,7 @@ class _Category_pageState extends State<Category_page> {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(
-              child: Text("No products found in cart"),
+              child: Text("Không tìm thấy sản phẩm trong danh mục"),
             );
           } else {
             return GridView.builder(

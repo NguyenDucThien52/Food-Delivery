@@ -56,6 +56,9 @@ public class CategoryService {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
+        if(file.isEmpty()){
+            return null;
+        }
         Bucket bucket = StorageClient.getInstance().bucket();
         String blobName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
         Blob blob = bucket.create(blobName, file.getBytes(), file.getContentType());

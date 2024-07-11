@@ -20,7 +20,6 @@ class ReviewService{
   }
   
   Future<Review> getReviewByEmailandProduct(int product_id) async{
-    print('$apiUrl/getreviewbyproductandemail?product_id=$product_id&email=$email');
     final response = await http.get(Uri.parse('$apiUrl/getreviewbyproductandemail?product_id=$product_id&email=$email'));
     if(response.statusCode == 200){
       Review review = Review.fromJson(json.decode(response.body));

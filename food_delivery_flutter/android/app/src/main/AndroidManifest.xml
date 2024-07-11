@@ -2,7 +2,7 @@
     <application
         android:label="food_delivery"
         android:name="${applicationName}"
-        android:icon="@mipmap/z5258531479791_f8d415d4eba6ddc3a51ec361f6ff951a"
+        android:icon="@mipmap/deliveryman"
         android:debuggable="true">
         <activity
             android:name=".MainActivity"

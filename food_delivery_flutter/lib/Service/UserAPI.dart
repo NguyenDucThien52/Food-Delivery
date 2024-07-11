@@ -6,7 +6,6 @@ class UserService {
   String apiUrl = 'http://192.168.1.4:8080/api/users';
 
   Future<void> registerUser(Person person) async {
-    print('$apiUrl/insert');
     final response = await http.post(
       Uri.parse('$apiUrl/insert'),
       headers: <String, String>{
@@ -23,7 +22,6 @@ class UserService {
   }
   
   Future<Person> getUser(String? email) async{
-    print('$apiUrl?email=$email');
     final response = await http.get(Uri.parse('$apiUrl?email=$email'));
     if(response.statusCode == 200){
       return Person.fromJson(json.decode(response.body));

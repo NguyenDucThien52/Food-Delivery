@@ -18,8 +18,6 @@ class OrderItemService {
   }
 
   Future<void> saveOrderItem(OrderItem orderItem) async {
-    print('$apiUrl/insert');
-    print(orderItem.product_id.toString() + " " + orderItem.quantity.toString() + " " + orderItem.order_id.toString());
     final response = await http.post(
       Uri.parse('$apiUrl/insert'),
       headers: <String, String>{

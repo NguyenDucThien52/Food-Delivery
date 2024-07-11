@@ -41,7 +41,7 @@ class _OrderItem_pageState extends State<OrderItem_page> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData) {
-              return Center(child: Text('No products found in orderitem'));
+              return Center(child: Text('Không tìm thấy sản phẩm nào trong đơn hàng'));
             } else {
               return RateDialog(
                 reivew: snapshot.data,
@@ -83,7 +83,7 @@ class _OrderItem_pageState extends State<OrderItem_page> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No products found in cart'));
+            return Center(child: Text('Không tìm thấy sản phẩm ở đơn hàng'));
           } else {
             print("Hello");
             return ListView.builder(
@@ -129,6 +129,14 @@ class _OrderItem_pageState extends State<OrderItem_page> {
       },child: Text("Xác nhận đã chuyển đơn hàng thành công"), style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primaryContainer),)),
     );
   }
+}
+
+void showSnackBar(BuildContext context) {
+  final snackBar = SnackBar(
+    content: Text('Bạn đã đánh giá sản phẩm thành công!'),
+  );
+
+  ScaffoldMessenger.of(context).showSnackBar(snackBar);
 }
 
 class RateDialog extends StatefulWidget {
@@ -229,6 +237,7 @@ class _RateDialogState extends State<RateDialog> {
               }
             });
             Navigator.pop(context);
+            showSnackBar(context);
           },
           child: Text("Xác nhận"),
         ),

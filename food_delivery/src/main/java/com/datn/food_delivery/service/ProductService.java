@@ -32,7 +32,7 @@ public class ProductService {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
         List<Product> products = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents){
+        for (QueryDocumentSnapshot document : documents) {
             Product product = document.toObject(Product.class);
             product.setProduct_id(Long.parseLong(document.getId()));
             products.add(product);
@@ -46,9 +46,9 @@ public class ProductService {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
         List<Product> products = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents){
+        for (QueryDocumentSnapshot document : documents) {
             Product product = document.toObject(Product.class);
-            if(product.getName().toLowerCase().contains(keyword.toLowerCase())){
+            if (product.getName().toLowerCase().contains(keyword.toLowerCase())) {
                 product.setProduct_id(Long.parseLong(document.getId()));
                 products.add(product);
             }
@@ -57,6 +57,9 @@ public class ProductService {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
+        if (file.isEmpty()) {
+            return null;
+        }
         Bucket bucket = StorageClient.getInstance().bucket();
         String blobName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
         Blob blob = bucket.create(blobName, file.getBytes(), file.getContentType());
@@ -66,7 +69,7 @@ public class ProductService {
         return blob.getMediaLink();
     }
 
-    public Product getProductByid(long prooduct_id) throws InterruptedException, ExecutionException{
+    public Product getProductByid(long prooduct_id) throws InterruptedException, ExecutionException {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<QuerySnapshot> future = firestore.collection("products").whereEqualTo("product_id", prooduct_id).get();
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
@@ -79,14 +82,17 @@ public class ProductService {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
         List<Product> products = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents){
+        for (QueryDocumentSnapshot document : documents) {
             Product product = document.toObject(Product.class);
             product.setProduct_id(Long.parseLong(document.getId()));
-            if(product_id.contains(product.getProduct_id())){
-                products.add(product);
-            }
+            products.add(product);
         }
-        return products;
+        List<Product> sortedProducts = new ArrayList<>();
+        for (Long id : product_id) {
+            Product product = getProductByid(id);
+            sortedProducts.add(product);
+        }
+        return sortedProducts;
     }
 
     public List<Product> getProductsByCategory(Long category_id) throws InterruptedException, ExecutionException {
@@ -95,7 +101,7 @@ public class ProductService {
         List<QueryDocumentSnapshot> documents = future.get().getDocuments();
 
         List<Product> products = new ArrayList<>();
-        for (QueryDocumentSnapshot document : documents){
+        for (QueryDocumentSnapshot document : documents) {
             Product product = document.toObject(Product.class);
             product.setProduct_id(Long.parseLong(document.getId()));
             products.add(product);
@@ -103,7 +109,7 @@ public class ProductService {
         return products;
     }
 
-    public void deleteProduct(Long product_id){
+    public void deleteProduct(Long product_id) {
         Firestore firestore = FirestoreClient.getFirestore();
         ApiFuture<WriteResult> future = firestore.collection("products").document(product_id.toString()).delete();
     }

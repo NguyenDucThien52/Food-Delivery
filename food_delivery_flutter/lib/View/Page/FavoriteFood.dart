@@ -50,7 +50,7 @@ class _FavoriteFood_pageState extends State<FavoriteFood_page> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
-            return Center(child: Text('No products found in cart'));
+            return Center(child: Text('Không có món ăn yêu thích'));
           } else {
             return FutureBuilder<List<Product>>(
               future: products,
@@ -59,8 +59,19 @@ class _FavoriteFood_pageState extends State<FavoriteFood_page> {
                   return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData) {
-                  return Center(child: Text('No products found in cart'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.shopping_cart,
+                          size: 100,
+                        ),
+                        Text('không có món ăn yêu thích')
+                      ],
+                    ),
+                  );
                 } else {
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
@@ -82,28 +93,30 @@ class _FavoriteFood_pageState extends State<FavoriteFood_page> {
                                 )
                               ],
                             ),
-                            trailing: IconButton(onPressed: (){
-                              int cartItemid = DateTime.now().millisecondsSinceEpoch;
-                              CartItemService()
-                                  .fetchCartItem(
-                                  snapshot.data![index].product_id, widget.cart.cart_id)
-                                  .then((value) {
-                                print(value.quantity);
-                                if (value.quantity == 0) {
-                                  CartItemService().saveCartItem(CartItem(
-                                      cart_id: widget.cart.cart_id,
-                                      quantity: 1,
-                                      product_id: snapshot.data![index].product_id,
-                                      cartItem_id: cartItemid));
-                                } else {
-                                  CartItemService().saveCartItem(CartItem(
-                                      cart_id: widget.cart.cart_id,
-                                      quantity: (value.quantity + 1),
-                                      product_id: snapshot.data![index].product_id,
-                                      cartItem_id: value.cartItem_id));
-                                }
-                              });
-                            }, icon: Icon(Icons.add_circle_outline),),
+                            trailing: IconButton(
+                              onPressed: () {
+                                int cartItemid = DateTime.now().millisecondsSinceEpoch;
+                                CartItemService()
+                                    .fetchCartItem(snapshot.data![index].product_id, widget.cart.cart_id)
+                                    .then((value) {
+                                  print(value.quantity);
+                                  if (value.quantity == 0) {
+                                    CartItemService().saveCartItem(CartItem(
+                                        cart_id: widget.cart.cart_id,
+                                        quantity: 1,
+                                        product_id: snapshot.data![index].product_id,
+                                        cartItem_id: cartItemid));
+                                  } else {
+                                    CartItemService().saveCartItem(CartItem(
+                                        cart_id: widget.cart.cart_id,
+                                        quantity: (value.quantity + 1),
+                                        product_id: snapshot.data![index].product_id,
+                                        cartItem_id: value.cartItem_id));
+                                  }
+                                });
+                              },
+                              icon: Icon(Icons.add_circle_outline),
+                            ),
                           ),
                         ),
                       );

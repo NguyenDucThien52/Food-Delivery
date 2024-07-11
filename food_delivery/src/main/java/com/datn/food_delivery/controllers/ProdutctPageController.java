@@ -63,8 +63,9 @@ public class ProdutctPageController {
     public String updateProduct(ProductDTO productDTO) throws ExecutionException, InterruptedException, IOException {
         Product product_old = service.getProductByid(productDTO.getProductId());
         String imageURL = product_old.getImageURL();
-        if(imageURL==null){
-            imageURL = service.uploadFile(productDTO.getImageURL());
+        String newImageURL = service.uploadFile(productDTO.getImageURL());
+        if(newImageURL!=null){
+            imageURL = newImageURL;
         }
         Product product = new Product(productDTO.getProductId(), productDTO.getName(), productDTO.getDescription(), productDTO.getPrice(), productDTO.getCategoryId(),  imageURL);
         service.saveProduct(product);

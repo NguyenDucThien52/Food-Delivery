@@ -30,6 +30,30 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
   late String? email;
   int id = 0;
 
+  void showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã thêm thành công sản phẩm vào giỏ hàng!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showSnackBaraddfavorite(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã thêm thành công sản phẩm yêu thích!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showSnackBardeletefavorite(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã xóa thành công sản phẩm yêu thích!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -94,7 +118,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                             } else if (snapshot.hasError) {
                               return Center(child: Text('Error: ${snapshot.error}'));
                             } else if (!snapshot.hasData) {
-                              return Center(child: Text('No products found in cart'));
+                              return Center(child: Text('Không tìm thấy thông tin sản phẩm'));
                             } else {
                               return IconButton(
                                 onPressed: () {
@@ -107,6 +131,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                                         favoriteFood_id: id,
                                         product_id: widget.product.product_id,
                                         email: FirebaseAuth.instance.currentUser!.email));
+                                    showSnackBaraddfavorite(context);
                                   } else {
                                     if (id == 0) {
                                       FavoriteFoodService().deleteFavoriteFood(snapshot.data!.favoriteFood_id);
@@ -116,6 +141,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                                     setState(() {
                                       email = "";
                                     });
+                                    showSnackBardeletefavorite(context);
                                   }
                                 },
                                 icon: email == "" ? Icon(Icons.favorite_border) : Icon(Icons.favorite),
@@ -135,7 +161,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                               } else if (snapshot.hasError) {
                                 return Center(child: Text('Error: ${snapshot.error}'));
                               } else if (!snapshot.hasData) {
-                                return Center(child: Text('No orders found.'));
+                                return Center(child: Text('Không tìm thấy đơn hàng nào'));
                               } else {
                                 for (int i = 0; i < snapshot.data!.length; i++) {
                                   rate += snapshot.data![i].rating;
@@ -176,6 +202,7 @@ class _ProductDetail_pageState extends State<ProductDetail_page> {
                   cartItem_id: value.cartItem_id));
             }
           });
+          showSnackBar(context);
         },
         child: Text("Đặt hàng"),
       ),

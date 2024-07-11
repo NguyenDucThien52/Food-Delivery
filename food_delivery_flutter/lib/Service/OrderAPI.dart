@@ -14,7 +14,6 @@ class OrderService {
     if (response.statusCode == 200) {
       List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
       List<Order> orders = body.map((dynamic item) => Order.fromJson(item)).toList();
-      print(orders[0].quantity);
       return orders;
     } else {
       throw Exception("Failed to load order");

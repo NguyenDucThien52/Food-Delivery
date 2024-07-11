@@ -27,6 +27,14 @@ class _HomeState extends State<Home> {
   late Future<Cart> cart;
   late Future<List<Category>> categories;
 
+  void showSnackBar(BuildContext context) {
+    final snackBar = SnackBar(
+      content: Text('Bạn đã thêm thành công sản phẩm vào giỏ hàng!'),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
   @override
   void initState() {
     super.initState();
@@ -55,7 +63,7 @@ class _HomeState extends State<Home> {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return Center(child: CircularProgressIndicator());
                             } else if (snapshot.hasError) {
-                              return Center(child: Text('Error: ${snapshot.error}'));
+                              return Center(child: Text('Error: ${snapshot.error} 1'));
                             } else {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -202,6 +210,7 @@ class _HomeState extends State<Home> {
                                                                         cartItem_id: value.cartItem_id));
                                                                   }
                                                                 });
+                                                                showSnackBar(context);
                                                               },
                                                               icon: Icon(Icons.add_circle_outline, size: 35),
                                                             ),
@@ -280,6 +289,7 @@ class _HomeState extends State<Home> {
                                                             cartItem_id: value.cartItem_id));
                                                       }
                                                     });
+                                                    showSnackBar(context);
                                                   },
                                                   icon: Icon(Icons.add_circle_outline),
                                                 ),
