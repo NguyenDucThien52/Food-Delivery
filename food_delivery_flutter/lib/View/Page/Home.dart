@@ -24,6 +24,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   late Future<List<Product>> products;
+  late Future<List<Product>> productsRate;
   late Future<Cart> cart;
   late Future<List<Category>> categories;
 
@@ -40,6 +41,7 @@ class _HomeState extends State<Home> {
     super.initState();
     cart = CartService().fetchCart();
     products = ProductService().fetchProducts();
+    productsRate = ProductService().getProductByRate();
     categories = CategoryService().fetchCategory();
   }
 
@@ -141,85 +143,95 @@ class _HomeState extends State<Home> {
                                       itemCount: snapshot.data!.length,
                                       itemBuilder: (context, index) {
                                         Product product = snapshot.data![index];
-                                        return Padding(
-                                          padding: const EdgeInsets.all(8.0),
-                                          child: Card(
-                                            elevation: 4.0,
-                                            child: SizedBox(
-                                              width: 180, // Đặt chiều rộng cho mỗi Card
-                                              child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Image.network(
-                                                    product.imageURL,
-                                                    height: 200,
-                                                    width: double.infinity,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                  Row(
-                                                    children: [
-                                                      SizedBox(
-                                                        width: 116,
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                                          children: [
-                                                            Padding(
-                                                              padding: const EdgeInsets.all(10.0),
-                                                              child: Text(
-                                                                product.name,
-                                                                style: TextStyle(
-                                                                    fontSize: 16, fontWeight: FontWeight.bold),
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => ProductDetail_page(
+                                                        product: snapshot.data![index], cart: cartSnapshot.data)));
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Card(
+                                              elevation: 4.0,
+                                              child: SizedBox(
+                                                width: 180, // Đặt chiều rộng cho mỗi Card
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Image.network(
+                                                      product.imageURL,
+                                                      height: 200,
+                                                      width: double.infinity,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 116,
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              Padding(
+                                                                padding: const EdgeInsets.all(10.0),
+                                                                child: Text(
+                                                                  product.name,
+                                                                  style: TextStyle(
+                                                                      fontSize: 16, fontWeight: FontWeight.bold),
+                                                                ),
                                                               ),
-                                                            ),
-                                                            Padding(
-                                                              padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                                                              child: Text(
-                                                                '\$${product.price.toStringAsFixed(2)}',
-                                                                style: TextStyle(fontSize: 16, color: Colors.grey),
+                                                              Padding(
+                                                                padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                                                                child: Text(
+                                                                  '${product.price.toStringAsFixed(0)}đ',
+                                                                  style: TextStyle(fontSize: 16, color: Colors.grey),
+                                                                ),
                                                               ),
-                                                            ),
-                                                          ],
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                      SizedBox(
-                                                        height: 70,
-                                                        width: 50,
-                                                        child: Column(
-                                                          crossAxisAlignment: CrossAxisAlignment.end,
-                                                          mainAxisAlignment: MainAxisAlignment.end,
-                                                          children: [
-                                                            IconButton(
-                                                              onPressed: () {
-                                                                int cartItemid = DateTime.now().millisecondsSinceEpoch;
-                                                                CartItemService()
-                                                                    .fetchCartItem(
-                                                                        product.product_id, cartSnapshot.data!.cart_id)
-                                                                    .then((value) {
-                                                                  print(value.quantity);
-                                                                  if (value.quantity == 0) {
-                                                                    CartItemService().saveCartItem(CartItem(
-                                                                        cart_id: cartSnapshot.data!.cart_id,
-                                                                        quantity: 1,
-                                                                        product_id: product.product_id,
-                                                                        cartItem_id: cartItemid));
-                                                                  } else {
-                                                                    CartItemService().saveCartItem(CartItem(
-                                                                        cart_id: cartSnapshot.data!.cart_id,
-                                                                        quantity: (value.quantity + 1),
-                                                                        product_id: product.product_id,
-                                                                        cartItem_id: value.cartItem_id));
-                                                                  }
-                                                                });
-                                                                showSnackBar(context);
-                                                              },
-                                                              icon: Icon(Icons.add_circle_outline, size: 35),
-                                                            ),
-                                                          ],
+                                                        SizedBox(
+                                                          height: 70,
+                                                          width: 50,
+                                                          child: Column(
+                                                            crossAxisAlignment: CrossAxisAlignment.end,
+                                                            mainAxisAlignment: MainAxisAlignment.end,
+                                                            children: [
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  int cartItemid =
+                                                                      DateTime.now().millisecondsSinceEpoch;
+                                                                  CartItemService()
+                                                                      .fetchCartItem(product.product_id,
+                                                                          cartSnapshot.data!.cart_id)
+                                                                      .then((value) {
+                                                                    print(value.quantity);
+                                                                    if (value.quantity == 0) {
+                                                                      CartItemService().saveCartItem(CartItem(
+                                                                          cart_id: cartSnapshot.data!.cart_id,
+                                                                          quantity: 1,
+                                                                          product_id: product.product_id,
+                                                                          cartItem_id: cartItemid));
+                                                                    } else {
+                                                                      CartItemService().saveCartItem(CartItem(
+                                                                          cart_id: cartSnapshot.data!.cart_id,
+                                                                          quantity: (value.quantity + 1),
+                                                                          product_id: product.product_id,
+                                                                          cartItem_id: value.cartItem_id));
+                                                                    }
+                                                                  });
+                                                                  showSnackBar(context);
+                                                                },
+                                                                icon: Icon(Icons.add_circle_outline, size: 35),
+                                                              ),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                             ),
                                           ),
@@ -234,37 +246,47 @@ class _HomeState extends State<Home> {
                                       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                                     ),
                                   ),
-                                  Column(
-                                    children: [
-                                      for (var i = 0; i < snapshot.data!.length; i++)
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => ProductDetail_page(
-                                                          product: snapshot.data![i],
-                                                          cart: cartSnapshot.data,
-                                                        )));
-                                          },
-                                          child: Padding(
-                                            padding: EdgeInsets.symmetric(horizontal: 10),
-                                            child: Card(
-                                              color: Theme.of(context).colorScheme.background,
+                                  FutureBuilder(
+                                    future: productsRate,
+                                    builder: (context, productSnapshot) {
+                                      if (productSnapshot.connectionState == ConnectionState.waiting) {
+                                        return Center(child: CircularProgressIndicator());
+                                      } else if (productSnapshot.hasError) {
+                                        return Center(child: Text('Error: ${productSnapshot.error}'));
+                                      } else if (!productSnapshot.hasData) {
+                                        return Center(child: Text('Không tìm thấy thông tin sản phẩm'));
+                                      } else {
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: productSnapshot.data!.length,
+                                          itemBuilder: (context, index) {
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (conext) => ProductDetail_page(
+                                                              product: productSnapshot.data![index],
+                                                              cart: cartSnapshot.data,
+                                                            )));
+                                              },
                                               child: ListTile(
                                                 leading: Image.network(
-                                                  snapshot.data![i].imageURL,
-                                                  height: 60,
-                                                  width: 60,
+                                                  productSnapshot.data![index].imageURL,
                                                   fit: BoxFit.cover,
+                                                  width: 70,
+                                                  height: 70,
                                                 ),
                                                 title: Column(
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Text(snapshot.data![i].name),
                                                     Text(
-                                                      snapshot.data![i].price.toString(),
-                                                      style: TextStyle(fontSize: 10),
+                                                      productSnapshot.data![index].name,
+                                                      style: TextStyle(fontSize: 16),
+                                                    ),
+                                                    Text(
+                                                      '${productSnapshot.data![index].price.toStringAsFixed(0)}đ',
+                                                      style: TextStyle(color: Colors.grey),
                                                     ),
                                                   ],
                                                 ),
@@ -272,20 +294,21 @@ class _HomeState extends State<Home> {
                                                   onPressed: () {
                                                     int cartItemid = DateTime.now().millisecondsSinceEpoch;
                                                     CartItemService()
-                                                        .fetchCartItem(
-                                                            snapshot.data![i].product_id, cartSnapshot.data!.cart_id)
+                                                        .fetchCartItem(productSnapshot.data![index].product_id,
+                                                            cartSnapshot.data!.cart_id)
                                                         .then((value) {
+                                                      print(value.quantity);
                                                       if (value.quantity == 0) {
                                                         CartItemService().saveCartItem(CartItem(
                                                             cart_id: cartSnapshot.data!.cart_id,
                                                             quantity: 1,
-                                                            product_id: snapshot.data![i].product_id,
+                                                            product_id: productSnapshot.data![index].product_id,
                                                             cartItem_id: cartItemid));
                                                       } else {
                                                         CartItemService().saveCartItem(CartItem(
                                                             cart_id: cartSnapshot.data!.cart_id,
                                                             quantity: (value.quantity + 1),
-                                                            product_id: snapshot.data![i].product_id,
+                                                            product_id: productSnapshot.data![index].product_id,
                                                             cartItem_id: value.cartItem_id));
                                                       }
                                                     });
@@ -294,11 +317,78 @@ class _HomeState extends State<Home> {
                                                   icon: Icon(Icons.add_circle_outline),
                                                 ),
                                               ),
-                                            ),
-                                          ),
-                                        )
-                                    ],
+                                            );
+                                          },
+                                        );
+                                      }
+                                    },
                                   ),
+                                  SizedBox(height: 50,)
+                                  // Column(
+                                  //   children: [
+                                  //     for (var i = 0; i < snapshot.data!.length; i++)
+                                  //       GestureDetector(
+                                  //         onTap: () {
+                                  //           Navigator.push(
+                                  //               context,
+                                  //               MaterialPageRoute(
+                                  //                   builder: (context) => ProductDetail_page(
+                                  //                         product: snapshot.data![i],
+                                  //                         cart: cartSnapshot.data,
+                                  //                       )));
+                                  //         },
+                                  //         child: Padding(
+                                  //           padding: EdgeInsets.symmetric(horizontal: 10),
+                                  //           child: Card(
+                                  //             color: Theme.of(context).colorScheme.background,
+                                  //             child: ListTile(
+                                  //               leading: Image.network(
+                                  //                 snapshot.data![i].imageURL,
+                                  //                 height: 60,
+                                  //                 width: 60,
+                                  //                 fit: BoxFit.cover,
+                                  //               ),
+                                  //               title: Column(
+                                  //                 crossAxisAlignment: CrossAxisAlignment.start,
+                                  //                 children: [
+                                  //                   Text(snapshot.data![i].name),
+                                  //                   Text(
+                                  //                     snapshot.data![i].price.toString(),
+                                  //                     style: TextStyle(fontSize: 10),
+                                  //                   ),
+                                  //                 ],
+                                  //               ),
+                                  //               trailing: IconButton(
+                                  //                 onPressed: () {
+                                  //                   int cartItemid = DateTime.now().millisecondsSinceEpoch;
+                                  //                   CartItemService()
+                                  //                       .fetchCartItem(
+                                  //                           snapshot.data![i].product_id, cartSnapshot.data!.cart_id)
+                                  //                       .then((value) {
+                                  //                     if (value.quantity == 0) {
+                                  //                       CartItemService().saveCartItem(CartItem(
+                                  //                           cart_id: cartSnapshot.data!.cart_id,
+                                  //                           quantity: 1,
+                                  //                           product_id: snapshot.data![i].product_id,
+                                  //                           cartItem_id: cartItemid));
+                                  //                     } else {
+                                  //                       CartItemService().saveCartItem(CartItem(
+                                  //                           cart_id: cartSnapshot.data!.cart_id,
+                                  //                           quantity: (value.quantity + 1),
+                                  //                           product_id: snapshot.data![i].product_id,
+                                  //                           cartItem_id: value.cartItem_id));
+                                  //                     }
+                                  //                   });
+                                  //                   showSnackBar(context);
+                                  //                 },
+                                  //                 icon: Icon(Icons.add_circle_outline),
+                                  //               ),
+                                  //             ),
+                                  //           ),
+                                  //         ),
+                                  //       )
+                                  //   ],
+                                  // ),
                                 ],
                               );
                             }

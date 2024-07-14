@@ -125,7 +125,6 @@ class _OrderItem_pageState extends State<OrderItem_page> {
       bottomNavigationBar: Padding(padding: EdgeInsets.symmetric(vertical: 15),child: ElevatedButton(onPressed:(){
         OrderService().insertOrder(Order(order_id: widget.order.order_id, totalAmount: widget.order.totalAmount, quantity: widget.order.quantity, orderDate: widget.order.orderDate, deliveryAddress: widget.order.deliveryAddress, paymentMethod: widget.order.paymentMethod, email: widget.order.email, receiver_id: widget.order.receiver_id, order_Status: "Đã giao hàng"));
         Navigator.pop(context);
-        Navigator.pop(context);
       },child: Text("Xác nhận đã chuyển đơn hàng thành công"), style: ElevatedButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primaryContainer),)),
     );
   }

@@ -356,7 +356,8 @@ class _SignUpPageState extends State<SignUpPage> {
             email: _emailController.text,
             address: "",
             phoneNumber: _phoneController.text,
-            imageURL: ""),
+            imageURL: "",
+        roles: "USER"),
       );
       CartService().saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: _emailController.text));
       print("Registered user: ${userCredential.user}");

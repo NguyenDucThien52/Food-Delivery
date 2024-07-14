@@ -195,7 +195,7 @@ class _Cart_pageState extends State<Cart_page> {
                           height: 50,
                           child: Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
                             Text(
-                              "Total: $total",
+                              "Tổng hóa đơn: $total",
                               style: TextStyle(fontSize: 20),
                             ),
                           ])),

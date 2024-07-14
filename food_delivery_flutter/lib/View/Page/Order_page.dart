@@ -149,8 +149,8 @@ class _Order_pageState extends State<Order_page> {
         receiver_id: DateTime.now().millisecondsSinceEpoch,
         receiver_name: widget.user.fullName,
         receiver_phone: widget.user.phoneNumber);
-    _nameController.text = receiver.receiver_name;
-    _phoneNumberController.text = receiver.receiver_phone;
+    _nameController.text = receiver.receiver_name!;
+    _phoneNumberController.text = receiver.receiver_phone!;
     _addressController.text = widget.user.address;
   }
 
@@ -230,11 +230,11 @@ class _Order_pageState extends State<Order_page> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.symmetric(horizontal: 10),
-                                    child: Text(receiver.receiver_name),
+                                    child: Text(receiver.receiver_name.toString()),
                                   ),
                                   Padding(
                                     padding: EdgeInsets.all(10),
-                                    child: Text(receiver.receiver_phone),
+                                    child: Text(receiver.receiver_phone.toString()),
                                   ),
                                   // Divider(height: 2, thickness: 3)
                                 ],

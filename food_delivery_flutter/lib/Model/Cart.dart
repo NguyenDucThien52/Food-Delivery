@@ -2,7 +2,7 @@ import 'dart:ffi';
 
 class Cart{
   final int cart_id;
-  final String email;
+  final String? email;
 
   Cart({required this.cart_id, required this.email});
 

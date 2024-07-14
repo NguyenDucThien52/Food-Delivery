@@ -7,7 +7,7 @@ class Order {
   final DateTime orderDate;
   final String deliveryAddress;
   final String paymentMethod;
-  final String email;
+  final String? email;
   final int receiver_id;
   final String order_Status;
 

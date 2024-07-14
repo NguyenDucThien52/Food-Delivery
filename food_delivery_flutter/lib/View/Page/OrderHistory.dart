@@ -41,7 +41,7 @@ class _OrderHistoryState extends State<OrderHistory> {
           } else if (orderSnapshot.hasError) {
             return Center(child: Text('Error: ${orderSnapshot.error}'));
           } else if (!orderSnapshot.hasData || orderSnapshot.data!.isEmpty) {
-            return Center(child: Text('No orders found.'));
+            return Center(child: Text('Không tìm thấy đơn hàng'));
           } else {
             return ListView.builder(
               itemCount: orderSnapshot.data!.length,

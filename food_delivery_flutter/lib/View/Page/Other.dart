@@ -1,10 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:food_delivery/Model/User.dart';
+import 'package:food_delivery/View/Anonymous/login_page.dart';
 import 'package:food_delivery/View/Page/OrderHistory.dart';
 import 'package:food_delivery/View/Page/Profile.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../Model/Cart.dart';
 import '../../Model/Order.dart';
@@ -20,6 +23,18 @@ class Other extends StatefulWidget {
 }
 
 class _OtherState extends State<Other> {
+  static Future<void> signOut({required BuildContext context}) async {
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    try {
+      if (!kIsWeb) {
+        await googleSignIn.signOut();
+      }
+      await FirebaseAuth.instance.signOut();
+    } catch (e) {
+      print(e);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +96,8 @@ class _OtherState extends State<Other> {
             GestureDetector(
               onTap: (){
                 FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
+                signOut(context: context);
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
               },
               child: Card(
                 color: Theme.of(context).colorScheme.background,

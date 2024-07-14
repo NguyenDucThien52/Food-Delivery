@@ -35,6 +35,12 @@ public class ProductController {
     List<Product> getProductsByCategory(@RequestParam Long category_id) throws  ExecutionException, InterruptedException{
         return firebaseService.getProductsByCategory(category_id);
     }
+
+    @GetMapping("/getproductbyrate")
+    List<Product> getProductsByRate() throws  ExecutionException, InterruptedException{
+        return firebaseService.getProductByRate();
+    }
+
     @GetMapping("/getProductByid")
     Product getProductById(@RequestParam Long product_id) throws  ExecutionException, InterruptedException{
         return firebaseService.getProductByid(product_id);

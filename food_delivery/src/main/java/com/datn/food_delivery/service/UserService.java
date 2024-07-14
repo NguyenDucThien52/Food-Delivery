@@ -20,6 +20,9 @@ public class UserService {
                 .whereEqualTo("email", email)
                 .get();
         List<QueryDocumentSnapshot> document = future.get().getDocuments();
+        if(document.isEmpty()){
+            return User.builder().email("").password("").roles("USER").address("").fullName("").imageURL("").phoneNumber("").build();
+        }
         return document.get(0).toObject(User.class);
     }
 

@@ -1,10 +1,17 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:food_delivery/Service/UserAPI.dart';
 import 'package:food_delivery/View/Anonymous/signup_page.dart';
 import 'package:food_delivery/View/Page/admin.dart';
 import 'package:food_delivery/View/Page/Home.dart';
 import 'package:food_delivery/View/Page/Home_page.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../../Model/Cart.dart';
+import '../../Model/User.dart';
+import '../../Service/CartAPI.dart';
+import '../Page/Admin_page.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -138,6 +145,9 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
                                 ),
                                 child: Text("Đăng nhập"),
                               ),
+                              ElevatedButton(onPressed: (){
+                                signInWithGoogle(context);
+                              }, child: Text("Đăng nhập với Google")),
                               const SizedBox(height: 15),
                               RichText(
                                 text: TextSpan(
@@ -184,17 +194,73 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
     return false;
   }
 
+  static Future<void> signInWithGoogle(BuildContext context) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user;
+
+    final GoogleSignIn googleSignIn = GoogleSignIn();
+
+    final GoogleSignInAccount? googleSignInAccount =
+    await googleSignIn.signIn();
+
+    if (googleSignInAccount != null) {
+      final GoogleSignInAuthentication googleSignInAuthentication =
+      await googleSignInAccount.authentication;
+
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
+
+      try {
+        final UserCredential userCredential =
+        await auth.signInWithCredential(credential);
+
+        user = userCredential.user;
+        Person user1 = Person(fullName: user!.displayName, email: user.email, phoneNumber: "", address: "", imageURL: "", roles: "USER");
+        UserService().getUser(user.email).then((value) {
+          if(value.email==""){
+            UserService().registerUser(user1);
+            CartService().saveCart(Cart(cart_id: DateTime.now().millisecondsSinceEpoch, email: user!.email));
+          }
+        });
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => Home_page(user1: user1,)),
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'account-exists-with-different-credential') {
+          // handle the error here
+        }
+        else if (e.code == 'invalid-credential') {
+          // handle the error here
+        }
+      } catch (e) {
+        // handle the error here
+      }
+    }
+    print(user);
+  }
+
   Future<void> login() async {
     try {
       await _auth.signInWithEmailAndPassword(
         email: _emailController.text,
         password: _passwordController.text,
       );
+      print(_emailController.text);
+      UserService().getUser(_emailController.text).then((value) {
+        if(value.roles=="ADMIN"){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Admin_page()));
+        }else{
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Home_page(user1: value,)));
+        }
+      });
       setState(() {
         _emailController.text = "";
         _passwordController.text = "";
       });
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Home_page()));
+
     } catch (e) {
       print(e);
     }

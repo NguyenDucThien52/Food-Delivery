@@ -6,15 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 @Configuration
 public class FirebaseConfig {
 
+
+
     @Bean
     public FirebaseApp initializeFirebase() throws IOException {
         FileInputStream serviceAccount =
-                new FileInputStream("D:\\DoAnTotNghiep\\Food-Delivery\\food_delivery\\src\\main\\resources\\config\\food-delivery-18948-firebase-adminsdk-d2r5l-9dcb523a8c.json");
+                new FileInputStream("./keyAccountService.json");
 
         FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
@@ -23,6 +26,25 @@ public class FirebaseConfig {
 
         return FirebaseApp.initializeApp(options);
     }
+
+//    @Bean
+//    public FirebaseApp initializeFirebase() throws IOException {
+//
+//        String credentialPath = System.getenv("GOOGLE_APPLICATION_CREDENTIALS");
+//        if (credentialPath == null) {
+//            throw new FileNotFoundException("");
+//        }
+//
+//        FileInputStream serviceAccount =
+//                new FileInputStream(credentialPath);
+//
+//        FirebaseOptions options = new FirebaseOptions.Builder()
+//                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+//                .setStorageBucket("food-delivery-18948.appspot.com")
+//                .build();
+//
+//        return FirebaseApp.initializeApp(options);
+//    }
 }
 
 

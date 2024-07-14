@@ -21,6 +21,7 @@ class _ProfileState extends State<Profile> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _addressController = TextEditingController();
+  late String password;
 
   late String imageURL;
   late String imageDatabase;
@@ -36,11 +37,13 @@ class _ProfileState extends State<Profile> {
   @override
   void initState() {
     super.initState();
+    print(FirebaseAuth.instance.currentUser!.email);
     user = UserService().getUser(FirebaseAuth.instance.currentUser!.email);
     user.then((value) {
-      _nameController.text = value.fullName;
-      _emailController.text = value.email;
-      _phoneController.text = value.phoneNumber;
+      print("imageURL: ${value.imageURL}");
+      _nameController.text = value.fullName!;
+      _emailController.text = value.email!;
+      _phoneController.text = value.phoneNumber!;
       _addressController.text = value.address;
       imageURL = value.imageURL;
       imageDatabase = value.imageURL;
@@ -78,6 +81,7 @@ class _ProfileState extends State<Profile> {
                   child: Text("Không tìm  thấy thông tin người dùng"),
                 );
               } else {
+                print("URL: ${snapshot.data!.imageURL}");
                 return Column(
                   children: [
                     Padding(
@@ -198,7 +202,8 @@ class _ProfileState extends State<Profile> {
                             email: _emailController.text,
                             phoneNumber: _phoneController.text,
                             address: _addressController.text,
-                            imageURL: imageURL));
+                            imageURL: imageURL,
+                        roles: "USER"));
                         if (imageDatabase!="") {
                           FirebaseStorage.instance.refFromURL(imageDatabase).delete();
                         }

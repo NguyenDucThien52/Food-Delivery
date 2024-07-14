@@ -1,6 +1,7 @@
 package com.datn.food_delivery.service;
 
 import com.datn.food_delivery.models.Product;
+import com.datn.food_delivery.models.Review;
 import com.google.api.core.ApiFuture;
 import com.google.cloud.firestore.*;
 import com.google.cloud.storage.Acl;
@@ -8,17 +9,20 @@ import com.google.cloud.storage.Blob;
 import com.google.cloud.storage.Bucket;
 import com.google.firebase.cloud.FirestoreClient;
 import com.google.firebase.cloud.StorageClient;
+import org.apache.juli.logging.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 
 @Service
 public class ProductService {
+
+    @Autowired
+    ReviewService reviewService;
 
     public void saveProduct(Product product) throws InterruptedException, ExecutionException {
         Firestore firestore = FirestoreClient.getFirestore();
@@ -106,6 +110,49 @@ public class ProductService {
             product.setProduct_id(Long.parseLong(document.getId()));
             products.add(product);
         }
+        return products;
+    }
+
+    public List<Product> getProductByRate() throws InterruptedException, ExecutionException {
+        Firestore firestore = FirestoreClient.getFirestore();
+        ApiFuture<QuerySnapshot> future = firestore.collection("products").get();
+        List<QueryDocumentSnapshot> documents = future.get().getDocuments();
+
+        double[] rate = new double[documents.size()];
+        List<Product> products = new ArrayList<>();
+        List<Review> reviews;
+        int index = 0;
+        for (QueryDocumentSnapshot document : documents) {
+            int length = 0;
+            int total = 0;
+            Product product = document.toObject(Product.class);
+            product.setProduct_id(Long.parseLong(document.getId()));
+            reviews = reviewService.getReviews(product.getProduct_id());
+            for (Review review : reviews) {
+                length++;
+                total += review.getRating();
+            }
+            if (length == 0) {
+                rate[index++] = 0;
+            } else {
+                rate[index++] = (double) total / length;
+            }
+            products.add(product);
+        }
+        for(int i=0; i<rate.length; i++) {
+            for(int j=i+1; j<rate.length; j++) {
+                if(rate[i] > rate[j]) {
+                    double temp = rate[i];
+                    rate[i] = rate[j];
+                    rate[j] = temp;
+                    Product producti = products.get(i);
+                    Product productj = products.get(j);
+                    products.set(i, productj);
+                    products.set(j, producti);
+                }
+            }
+        }
+        Collections.reverse(products);
         return products;
     }
 

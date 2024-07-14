@@ -20,6 +20,17 @@ class OrderService {
     }
   }
 
+  Future<List<Order>> getAllOrders() async {
+    final response = await http.get(Uri.parse('$apiUrl/getall'));
+    if(response.statusCode == 200){
+      List<dynamic> body = json.decode(utf8.decode(response.bodyBytes));
+      List<Order> orders = body.map((dynamic item) => Order.fromJson(item)).toList();
+      return orders;
+    }else{
+      throw Exception("Failed to load order");
+    }
+  }
+
   Future<void> insertOrder(Order order) async {
     final response = await http.post(Uri.parse('$apiUrl/insert'),
         headers: <String, String>{
@@ -28,7 +39,7 @@ class OrderService {
         body: json.encode(order.toJson()));
     if (response.statusCode == 200) {
       print("Create order successfully!");
-    }else{
+    } else {
       throw Exception("Failed to create order");
     }
   }

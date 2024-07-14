@@ -6,6 +6,7 @@ import com.datn.food_delivery.dto.ProductDTO;
 import com.datn.food_delivery.service.CategoryService;
 import com.datn.food_delivery.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;

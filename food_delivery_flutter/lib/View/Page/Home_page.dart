@@ -8,11 +8,15 @@ import 'package:food_delivery/View/Page/Cart_page.dart';
 import 'package:food_delivery/View/Page/Other.dart';
 import 'package:food_delivery/View/Page/Home.dart';
 import 'package:food_delivery/View/Page/shop.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import '../../Model/Cart.dart';
 import '../../Model/Order.dart';
 
 class Home_page extends StatefulWidget {
+  final Person user1;
+
+  Home_page({required this.user1});
   @override
   State<Home_page> createState() => _Home_pageState();
 }
@@ -30,17 +34,12 @@ class _Home_pageState extends State<Home_page> {
     super.initState();
     cartF = CartService().fetchCart();
     person = UserService().getUser(FirebaseAuth.instance.currentUser!.email);
-    person.then((value) {
-      user =
-          Person(email: value.email, phoneNumber: value.phoneNumber, address: value.address, fullName: value.fullName, imageURL: value.imageURL);
-    });
     cartF.then((value) {
       cart = Cart(cart_id: value.cart_id, email: value.email);
     });
     OrderService().fetchOrder().then((value) {
       orders = value;
     });
-    print("Hello");
   }
 
   @override
@@ -54,7 +53,7 @@ class _Home_pageState extends State<Home_page> {
       case 2:
         page = Other(cart: cart);
       default:
-        throw UnimplementedError('no widget for $selectedIndex');
+        throw UnimplementedError('Không có số $selectedIndex');
     }
     var mainArea = ColoredBox(
       color: Theme.of(context).colorScheme.surfaceVariant,
@@ -72,7 +71,7 @@ class _Home_pageState extends State<Home_page> {
               shape: const CircleBorder(),
               onPressed: () {
                 Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id, user: user)));
+                    MaterialPageRoute(builder: (context) => Cart_page(cart_id: snapshot.data!.cart_id, user: widget.user1)));
               },
               child: const Icon(Icons.shopping_cart, size: 28),
             ),

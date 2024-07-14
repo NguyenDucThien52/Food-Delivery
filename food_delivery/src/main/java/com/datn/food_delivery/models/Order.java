@@ -1,6 +1,5 @@
 package com.datn.food_delivery.models;
 
-import jakarta.persistence.*;
 import org.springframework.boot.autoconfigure.web.WebProperties;
 
 import java.util.Date;

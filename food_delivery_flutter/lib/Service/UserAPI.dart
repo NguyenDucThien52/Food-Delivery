@@ -22,9 +22,10 @@ class UserService {
   }
   
   Future<Person> getUser(String? email) async{
+    print('$apiUrl?email=$email');
     final response = await http.get(Uri.parse('$apiUrl?email=$email'));
     if(response.statusCode == 200){
-      return Person.fromJson(json.decode(response.body));
+      return Person.fromJson(json.decode(utf8.decode(response.bodyBytes)));
     }else{
       throw Exception("Failed to load user");
     }

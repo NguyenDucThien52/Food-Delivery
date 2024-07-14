@@ -20,6 +20,7 @@ public class UserController {
 
     @PostMapping("/insert")
     public void saveUser(@RequestBody User user) throws ExecutionException, InterruptedException {
+        System.out.println(user.getPassword());
         userService.saveUser(user);
     }
 }
